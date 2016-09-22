@@ -1,4 +1,6 @@
 ﻿using MedicalJournals.Entities;
+using MedicalJournals.Identity;
+using MedicalJournals.Models.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -28,8 +30,12 @@ namespace MedicalJournals.Web
         {
             // Add framework services.
             services.AddEntityFramework()
-                    .AddEntityFrameworkSqlServer()
-                    .AddDbContext<JournalContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"])); ;
+                .AddEntityFrameworkSqlServer()
+                .AddDbContext<JournalContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+                    
+            services.AddIdentity<ApplicationUser, JournalRole>()
+                .AddEntityFrameworkStores<JournalContext>()
+                .AddDefaultTokenProviders(); 
 
             // Add framework services.
             services.AddMvc();

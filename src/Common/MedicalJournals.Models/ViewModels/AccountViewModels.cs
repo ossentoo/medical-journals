@@ -104,7 +104,9 @@ namespace MedicalJournals.Models.ViewModels
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        public string Mobile { get; set; }
+        [Display(Name = "Full Name")]
+        public string FullName { get; set; }
+
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
