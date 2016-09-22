@@ -3,3 +3,19 @@
 ################################################################################
 
 /src/Common/MedicalJournals.Data/bin/Debug/netstandard1.6
+/src/Common/MedicalJournals.Entities/bin/Debug/netstandard1.6
+/src/Common/MedicalJournals.Entities/obj/Debug/netstandard1.6
+/src/Common/MedicalJournals.Enums/bin/Debug/netstandard1.6
+/src/Common/MedicalJournals.Enums/obj/Debug/netstandard1.6
+/src/Common/MedicalJournals.Helpers/bin/Debug/netstandard1.6
+/src/Common/MedicalJournals.Helpers/obj/Debug/netstandard1.6
+/src/Common/MedicalJournals.Identity/bin/Debug/netstandard1.6
+/src/Common/MedicalJournals.Identity/obj/Debug/netstandard1.6
+/src/Common/MedicalJournals.Models/bin/Debug/netstandard1.6
+/src/Common/MedicalJournals.Models/obj/Debug/netstandard1.6
+/src/MedicalJournals.Web/bin/Debug/netcoreapp1.0
+/src/MedicalJournals.Web/obj/Debug/netcoreapp1.0
+/src/Tests/MedicalJournals.IntegrationTests/obj/Debug
+/src/Tests/MedicalJournals.UnitTests/obj/Debug
+/src/ThickClient/bin/Debug
+/src/ThickClient/obj/Debug
