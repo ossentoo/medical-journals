@@ -19,3 +19,5 @@
 /src/Tests/MedicalJournals.UnitTests/obj/Debug
 /src/ThickClient/bin/Debug
 /src/ThickClient/obj/Debug
+/src/Tests/MedicalJournals.IntegrationTests/bin/Debug
+/src/Tests/MedicalJournals.UnitTests/bin/Debug

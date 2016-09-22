@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using MedicalJournals.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -28,6 +27,11 @@ namespace MedicalJournals.Web
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.AddEntityFramework()
+                    .AddEntityFrameworkSqlServer()
+                    .AddDbContext<JournalContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"])); ;
+
+            // Add framework services.
             services.AddMvc();
         }
 
@@ -48,6 +52,7 @@ namespace MedicalJournals.Web
             }
 
             app.UseStaticFiles();
+            app.UseIdentity();
 
             app.UseMvc(routes =>
             {
