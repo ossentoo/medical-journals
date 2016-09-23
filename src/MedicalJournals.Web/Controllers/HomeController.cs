@@ -15,13 +15,15 @@ namespace MedicalJournals.Web.Controllers
         
         public IActionResult Index()
         {
-            var user = _userManager.GetUserAsync
-                                 (HttpContext.User).Result;
+            var user = _userManager.GetUserAsync(HttpContext.User).Result;
 
-            ViewBag.Message = $"Welcome {user.FirstName}!";
-            if (_userManager.IsInRoleAsync(user, "NormalUser").Result)
+            if (user != null)
             {
-                ViewBag.RoleMessage = "You are a NormalUser.";
+                ViewBag.Message = $"Welcome {user.FirstName}!";
+                if (_userManager.IsInRoleAsync(user, "NormalUser").Result)
+                {
+                    ViewBag.RoleMessage = "You are a NormalUser.";
+                }
             }
             return View();
         }

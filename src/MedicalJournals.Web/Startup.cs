@@ -1,8 +1,11 @@
-﻿using MedicalJournals.Entities;
+﻿using System;
+using MedicalJournals.Entities;
+using MedicalJournals.Helpers;
 using MedicalJournals.Identity;
 using MedicalJournals.Models.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
@@ -31,11 +34,25 @@ namespace MedicalJournals.Web
             // Add framework services.
             services.AddEntityFramework()
                 .AddEntityFrameworkSqlServer()
-                .AddDbContext<JournalContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
-                    
-            services.AddIdentity<ApplicationUser, JournalRole>()
-                .AddEntityFrameworkStores<JournalContext>()
-                .AddDefaultTokenProviders(); 
+                // .AddDbContext<JournalContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]))
+                .AddDbContext<JournalContext>(o=>o.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"], b =>
+                {
+                    var assemblyName = typeof(JournalContext).GetAssembly().GetName().Name;
+
+                    b.MigrationsAssembly(assemblyName);
+                }));
+
+            services.AddIdentity<ApplicationUser, JournalRole>(o => {
+                    o.Password.RequiredLength = 8;
+                    o.Password.RequireDigit = true;
+                    o.Password.RequireLowercase = true;
+                    o.Password.RequireUppercase = true;
+                    o.Password.RequireNonAlphanumeric = true;
+                })
+                .AddEntityFrameworkStores<JournalContext, Guid>()
+                .AddDefaultTokenProviders()
+                .AddUserStore<UserStore<ApplicationUser, JournalRole, JournalContext, Guid>>()
+                .AddRoleStore<RoleStore<JournalRole, JournalContext, Guid>>();
 
             // Add framework services.
             services.AddMvc();

@@ -1,18 +1,18 @@
 ﻿@model MedicalJournals.Models.ViewModels.RegisterViewModel
 
-<script src="~/Scripts/jquery.js"></script>
-<script src="~/Scripts/jquery.validate.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.js">
-</script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 
 <h1>Register</h1>
 <form asp-controller="Account" asp-action="Register" method="post">
+    <h4>Create a new account.</h4>
+    <hr />
     <table>
-        <tr>
+        <tr  class="form-group">
             <td><label asp-for="UserName"></label></td>
             <td><input asp-for="UserName" /></td>
         </tr>
-        <tr>
+        <tr  class="form-group">
             <td><label asp-for="Password"></label></td>
             <td><input asp-for="Password" /></td>
         </tr>
