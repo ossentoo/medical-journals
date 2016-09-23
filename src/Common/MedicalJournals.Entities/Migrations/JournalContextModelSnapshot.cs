@@ -67,6 +67,24 @@ namespace MedicalJournals.Entities.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("MedicalJournals.Models.Data.Country", b =>
+                {
+                    b.Property<int>("CountryId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CountryCode")
+                        .HasAnnotation("MaxLength", 3);
+
+                    b.Property<string>("CountryName")
+                        .HasAnnotation("MaxLength", 255);
+
+                    b.Property<bool>("IsEnabled");
+
+                    b.HasKey("CountryId");
+
+                    b.ToTable("Countries");
+                });
+
             modelBuilder.Entity("MedicalJournals.Models.Data.JournalTag", b =>
                 {
                     b.Property<long>("JournalId");
@@ -139,8 +157,6 @@ namespace MedicalJournals.Entities.Migrations
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasAnnotation("MaxLength", 256);
-
-                    b.Property<byte>("UserTypeId");
 
                     b.HasKey("Id");
 
@@ -222,6 +238,8 @@ namespace MedicalJournals.Entities.Migrations
                     b.Property<Guid>("PublisherId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("CountryId");
+
                     b.Property<DateTime>("Created");
 
                     b.Property<bool>("IsEnabled");
@@ -233,6 +251,8 @@ namespace MedicalJournals.Entities.Migrations
                     b.Property<Guid?>("UserId");
 
                     b.HasKey("PublisherId");
+
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("UserId");
 
@@ -348,6 +368,10 @@ namespace MedicalJournals.Entities.Migrations
 
             modelBuilder.Entity("MedicalJournals.Models.Publisher", b =>
                 {
+                    b.HasOne("MedicalJournals.Models.Data.Country")
+                        .WithMany("Publishers")
+                        .HasForeignKey("CountryId");
+
                     b.HasOne("MedicalJournals.Models.Identity.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");

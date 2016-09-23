@@ -18,7 +18,7 @@ namespace MedicalJournals.Helpers
 
             var assemblies = new List<Assembly> {assembly};
             assemblies.AddRange(assemblyNames
-                .Where(p => p.Name.StartsWith("SpaceLinx"))
+                .Where(p => p.Name.StartsWith("MedicalJournals"))
                 .Select(item => Assembly.Load(item)));
 
             return assemblies.ToArray();

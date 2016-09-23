@@ -7,8 +7,6 @@ namespace MedicalJournals.Models.Interfaces
     {
         string FirstName { get; set; }
         string LastName { get; set; }
-        UType UserTypeId { get; set; }
         DateTime Created { get; set; }
-
     }
 }

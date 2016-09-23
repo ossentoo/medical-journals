@@ -26,7 +26,7 @@ namespace MedicalJournals.Models.ViewModels
         public void CreateMappings(IMapperConfigurationExpression config)
         {
             config.CreateMap<ApplicationUser, UserModel>()
-                .ForMember(x => x.UserType, opt => opt.MapFrom(x => x.UserTypeId.ToDescription()));
+                .ForMember(x => x.UserType, opt => opt.Ignore());
         }
     }
 }

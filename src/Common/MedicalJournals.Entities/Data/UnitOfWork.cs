@@ -17,6 +17,7 @@ namespace MedicalJournals.Entities.Data
         public IRepository<Application> Applications => GetStandardRepo<Application>();
 
         public IRepository<Publisher> Authors => GetStandardRepo<Publisher>();
+        public IRepository<Country> Countries => GetStandardRepo<Country>();
         public IRepository<Category> Categories => GetStandardRepo<Category>();
         public IRepository<Journal> Journals => GetStandardRepo<Journal>();
         public IRepository<ApplicationUser> Users => GetStandardRepo<ApplicationUser>();
@@ -67,6 +68,7 @@ namespace MedicalJournals.Entities.Data
         public IRepository<Application> Applications => GetStandardRepo<Application>();
 
         public IRepository<Publisher> Authors => GetStandardRepo<Publisher>();
+        public IRepository<Country> Countries => GetStandardRepo<Country>();
         public IRepository<Category> Categories => GetStandardRepo<Category>();
         public IRepository<Journal> Journals => GetStandardRepo<Journal>();
         public IRepository<ApplicationUser> Users => GetStandardRepo<ApplicationUser>();
@@ -93,6 +95,10 @@ namespace MedicalJournals.Entities.Data
             if (typeParameterType is Category)
             {
                 return new RepositoryMock<T>((IList<T>)Categories.Get().ToList());
+            }
+            if (typeParameterType is Country)
+            {
+                return new RepositoryMock<T>((IList<T>)Countries.Get().ToList());
             }
             if (typeParameterType is Journal)
             {

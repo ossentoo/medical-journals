@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MedicalJournals.Entities.Extensions;
 
 namespace MedicalJournals.Web
 {
@@ -59,7 +60,7 @@ namespace MedicalJournals.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceScopeFactory scopeFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -73,6 +74,10 @@ namespace MedicalJournals.Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
+            scopeFactory.SeedData(loggerFactory.CreateLogger("Seeding data"));
 
             app.UseStaticFiles();
             app.UseIdentity();

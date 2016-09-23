@@ -52,6 +52,21 @@ namespace MedicalJournals.Entities.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Countries",
+                columns: table => new
+                {
+                    CountryId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CountryCode = table.Column<string>(maxLength: 3, nullable: true),
+                    CountryName = table.Column<string>(maxLength: 255, nullable: true),
+                    IsEnabled = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Countries", x => x.CountryId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tags",
                 columns: table => new
                 {
@@ -85,8 +100,7 @@ namespace MedicalJournals.Entities.Migrations
                     PhoneNumberConfirmed = table.Column<bool>(nullable: false),
                     SecurityStamp = table.Column<string>(nullable: true),
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: false),
-                    UserTypeId = table.Column<byte>(nullable: false)
+                    UserName = table.Column<string>(maxLength: 256, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -133,6 +147,7 @@ namespace MedicalJournals.Entities.Migrations
                 columns: table => new
                 {
                     PublisherId = table.Column<Guid>(nullable: false),
+                    CountryId = table.Column<int>(nullable: true),
                     Created = table.Column<DateTime>(nullable: false, defaultValueSql: "GETDATE()"),
                     IsEnabled = table.Column<bool>(nullable: false),
                     LastModified = table.Column<DateTime>(nullable: false, defaultValueSql: "GETDATE()"),
@@ -142,6 +157,12 @@ namespace MedicalJournals.Entities.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Publishers", x => x.PublisherId);
+                    table.ForeignKey(
+                        name: "FK_Publishers_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
+                        principalColumn: "CountryId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Publishers_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -232,7 +253,7 @@ namespace MedicalJournals.Entities.Migrations
                     IsParentalAdvisory = table.Column<bool>(nullable: true),
                     IsPublic = table.Column<bool>(nullable: true),
                     IsUploadComplete = table.Column<bool>(nullable: true),
-                    LastModified = table.Column<DateTime>(nullable: false),
+                    LastModified = table.Column<DateTime>(nullable: false, defaultValueSql: "GETDATE()"),
                     LastViewed = table.Column<DateTime>(nullable: true),
                     OverviewThumbnailPath = table.Column<string>(nullable: true),
                     QueryId = table.Column<string>(nullable: true),
@@ -324,6 +345,11 @@ namespace MedicalJournals.Entities.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Publishers_CountryId",
+                table: "Publishers",
+                column: "CountryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Publishers_UserId",
                 table: "Publishers",
                 column: "UserId");
@@ -391,6 +417,9 @@ namespace MedicalJournals.Entities.Migrations
 
             migrationBuilder.DropTable(
                 name: "Publishers");
+
+            migrationBuilder.DropTable(
+                name: "Countries");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -142,6 +142,7 @@ C:\git\ossentoo\medical-journals\src\Common\MedicalJournals.Data\Interfaces\IRep
 C:\git\ossentoo\medical-journals\src\Common\MedicalJournals.Data\Interfaces\IRepositoryProvider.cs
 C:\git\ossentoo\medical-journals\src\Common\MedicalJournals.Data\Mock\Applications.cs
 C:\git\ossentoo\medical-journals\src\Common\MedicalJournals.Data\Mock\Categories.cs
+C:\git\ossentoo\medical-journals\src\Common\MedicalJournals.Data\Mock\Countries.cs
 C:\git\ossentoo\medical-journals\src\Common\MedicalJournals.Data\Mock\Journals.cs
 C:\git\ossentoo\medical-journals\src\Common\MedicalJournals.Data\Mock\Publishers.cs
 C:\git\ossentoo\medical-journals\src\Common\MedicalJournals.Data\Mock\Users.cs
