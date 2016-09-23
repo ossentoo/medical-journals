@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D816267B-BEE9-44DB-9EB8-0B9485EB130C}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
+		readme.md = readme.md
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MedicalJournals.Web", "src\MedicalJournals.Web\MedicalJournals.Web.xproj", "{9B5FD5D0-EE10-4AA7-9139-B3C68DB3799F}"
