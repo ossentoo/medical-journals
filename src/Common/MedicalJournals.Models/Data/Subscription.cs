@@ -14,7 +14,6 @@ namespace MedicalJournals.Models.Data
         }
 
         public Guid SubscriptionId { get; set; }
-        public Guid JournalId { get; set; }
         public DateTime Created { get; set; }
         public DateTime LastModified { get; set; }
         public bool IsEnabled { get; set; }

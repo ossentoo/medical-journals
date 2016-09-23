@@ -7,18 +7,13 @@ namespace MedicalJournals.Models.Data
 {
     public class Journal
     {
-        private long _journalId;
 
-        public long JournalId
+        public Journal()
         {
-            get { return _journalId; }
-            set
-            {
-                _journalId = value;
-                QueryId = ShortId.Encode(value);
-            }
+            JournalId = Guid.NewGuid();
         }
 
+        public Guid JournalId { get; set; }
         public int CategoryId { get; set; }
 
         public string Title { get; set; }

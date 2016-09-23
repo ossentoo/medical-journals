@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using MedicalJournals.Data.Interfaces;
 using MedicalJournals.Data.Repositories;
 using MedicalJournals.Entities.Interfaces;
-using MedicalJournals.Models;
 using MedicalJournals.Models.Data;
 using MedicalJournals.Models.Identity;
 
@@ -16,11 +15,12 @@ namespace MedicalJournals.Entities.Data
         private IRepositoryProvider RepositoryProvider { get; set; }
         public IRepository<Application> Applications => GetStandardRepo<Application>();
 
-        public IRepository<Publisher> Authors => GetStandardRepo<Publisher>();
+        public IRepository<Publisher> Publishers => GetStandardRepo<Publisher>();
         public IRepository<Country> Countries => GetStandardRepo<Country>();
         public IRepository<Category> Categories => GetStandardRepo<Category>();
         public IRepository<Journal> Journals => GetStandardRepo<Journal>();
         public IRepository<ApplicationUser> Users => GetStandardRepo<ApplicationUser>();
+        public IRepository<Subscription> Subscriptions => GetStandardRepo<Subscription>();
 
         public UnitOfWork(IRepositoryProvider repositoryProvider, JournalContext context)
         {
@@ -67,12 +67,12 @@ namespace MedicalJournals.Entities.Data
         private IRepositoryProvider RepositoryProvider { get; set; }
         public IRepository<Application> Applications => GetStandardRepo<Application>();
 
-        public IRepository<Publisher> Authors => GetStandardRepo<Publisher>();
+        public IRepository<Publisher> Publishers => GetStandardRepo<Publisher>();
         public IRepository<Country> Countries => GetStandardRepo<Country>();
         public IRepository<Category> Categories => GetStandardRepo<Category>();
         public IRepository<Journal> Journals => GetStandardRepo<Journal>();
         public IRepository<ApplicationUser> Users => GetStandardRepo<ApplicationUser>();
-
+        public IRepository<Subscription> Subscriptions => GetStandardRepo<Subscription>();
 
         public void Commit()
         {
@@ -89,7 +89,12 @@ namespace MedicalJournals.Entities.Data
 
             if (typeParameterType is Publisher)
             {
-                return new RepositoryMock<T>((IList<T>)Authors.Get().ToList());
+                return new RepositoryMock<T>((IList<T>)Publishers.Get().ToList());
+            }
+
+            if (typeParameterType is Subscription)
+            {
+                return new RepositoryMock<T>((IList<T>)Subscriptions.Get().ToList());
             }
 
             if (typeParameterType is Category)

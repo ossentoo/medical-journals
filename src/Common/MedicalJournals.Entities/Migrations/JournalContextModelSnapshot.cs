@@ -87,7 +87,7 @@ namespace MedicalJournals.Entities.Migrations
 
             modelBuilder.Entity("MedicalJournals.Models.Data.Journal", b =>
                 {
-                    b.Property<long>("JournalId")
+                    b.Property<Guid>("JournalId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<long?>("BlockCount");
@@ -150,7 +150,7 @@ namespace MedicalJournals.Entities.Migrations
 
             modelBuilder.Entity("MedicalJournals.Models.Data.JournalTag", b =>
                 {
-                    b.Property<long>("JournalId");
+                    b.Property<Guid>("JournalId");
 
                     b.Property<int>("TagId");
 
@@ -161,6 +161,56 @@ namespace MedicalJournals.Entities.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("JournalTags");
+                });
+
+            modelBuilder.Entity("MedicalJournals.Models.Data.Publisher", b =>
+                {
+                    b.Property<Guid>("PublisherId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("CountryId");
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<bool>("IsEnabled");
+
+                    b.Property<DateTime>("LastModified");
+
+                    b.Property<string>("Name");
+
+                    b.Property<Guid?>("UserId");
+
+                    b.HasKey("PublisherId");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Publishers");
+                });
+
+            modelBuilder.Entity("MedicalJournals.Models.Data.Subscription", b =>
+                {
+                    b.Property<Guid>("SubscriptionId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<bool>("IsEnabled");
+
+                    b.Property<Guid?>("JournalId");
+
+                    b.Property<DateTime>("LastModified");
+
+                    b.Property<Guid?>("UserId");
+
+                    b.HasKey("SubscriptionId");
+
+                    b.HasIndex("JournalId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Subscriptionss");
                 });
 
             modelBuilder.Entity("MedicalJournals.Models.Data.Tag", b =>
@@ -231,32 +281,6 @@ namespace MedicalJournals.Entities.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("MedicalJournals.Models.Publisher", b =>
-                {
-                    b.Property<Guid>("PublisherId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("CountryId");
-
-                    b.Property<DateTime>("Created");
-
-                    b.Property<bool>("IsEnabled");
-
-                    b.Property<DateTime>("LastModified");
-
-                    b.Property<string>("Name");
-
-                    b.Property<Guid?>("UserId");
-
-                    b.HasKey("PublisherId");
-
-                    b.HasIndex("CountryId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Publishers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<System.Guid>", b =>
@@ -349,7 +373,7 @@ namespace MedicalJournals.Entities.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("MedicalJournals.Models.Publisher", "Publisher")
+                    b.HasOne("MedicalJournals.Models.Data.Publisher", "Publisher")
                         .WithMany("Journals")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -366,11 +390,22 @@ namespace MedicalJournals.Entities.Migrations
                         .HasForeignKey("TagId");
                 });
 
-            modelBuilder.Entity("MedicalJournals.Models.Publisher", b =>
+            modelBuilder.Entity("MedicalJournals.Models.Data.Publisher", b =>
                 {
                     b.HasOne("MedicalJournals.Models.Data.Country")
                         .WithMany("Publishers")
                         .HasForeignKey("CountryId");
+
+                    b.HasOne("MedicalJournals.Models.Identity.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("MedicalJournals.Models.Data.Subscription", b =>
+                {
+                    b.HasOne("MedicalJournals.Models.Data.Journal", "Journal")
+                        .WithMany()
+                        .HasForeignKey("JournalId");
 
                     b.HasOne("MedicalJournals.Models.Identity.ApplicationUser", "User")
                         .WithMany()

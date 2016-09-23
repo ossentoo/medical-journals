@@ -86,7 +86,7 @@ namespace MedicalJournals.Entities.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
-                    Created = table.Column<DateTime>(nullable: false, defaultValueSql: "GETDATE()"),
+                    Created = table.Column<DateTime>(nullable: false),
                     Email = table.Column<string>(maxLength: 256, nullable: false),
                     EmailConfirmed = table.Column<bool>(nullable: false),
                     FirstName = table.Column<string>(nullable: true),
@@ -148,9 +148,9 @@ namespace MedicalJournals.Entities.Migrations
                 {
                     PublisherId = table.Column<Guid>(nullable: false),
                     CountryId = table.Column<int>(nullable: true),
-                    Created = table.Column<DateTime>(nullable: false, defaultValueSql: "GETDATE()"),
+                    Created = table.Column<DateTime>(nullable: false),
                     IsEnabled = table.Column<bool>(nullable: false),
-                    LastModified = table.Column<DateTime>(nullable: false, defaultValueSql: "GETDATE()"),
+                    LastModified = table.Column<DateTime>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     UserId = table.Column<Guid>(nullable: true)
                 },
@@ -240,11 +240,10 @@ namespace MedicalJournals.Entities.Migrations
                 name: "Journals",
                 columns: table => new
                 {
-                    JournalId = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    JournalId = table.Column<Guid>(nullable: false),
                     BlockCount = table.Column<long>(nullable: true),
                     CategoryId = table.Column<int>(nullable: false),
-                    Created = table.Column<DateTime>(nullable: false, defaultValueSql: "GETDATE()"),
+                    Created = table.Column<DateTime>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     FileName = table.Column<string>(nullable: true),
                     FileSize = table.Column<long>(nullable: true),
@@ -253,7 +252,7 @@ namespace MedicalJournals.Entities.Migrations
                     IsParentalAdvisory = table.Column<bool>(nullable: true),
                     IsPublic = table.Column<bool>(nullable: true),
                     IsUploadComplete = table.Column<bool>(nullable: true),
-                    LastModified = table.Column<DateTime>(nullable: false, defaultValueSql: "GETDATE()"),
+                    LastModified = table.Column<DateTime>(nullable: false),
                     LastViewed = table.Column<DateTime>(nullable: true),
                     OverviewThumbnailPath = table.Column<string>(nullable: true),
                     QueryId = table.Column<string>(nullable: true),
@@ -288,7 +287,7 @@ namespace MedicalJournals.Entities.Migrations
                 name: "JournalTags",
                 columns: table => new
                 {
-                    JournalId = table.Column<long>(nullable: false),
+                    JournalId = table.Column<Guid>(nullable: false),
                     TagId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -305,6 +304,34 @@ namespace MedicalJournals.Entities.Migrations
                         column: x => x.TagId,
                         principalTable: "Tags",
                         principalColumn: "TagId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Subscriptionss",
+                columns: table => new
+                {
+                    SubscriptionId = table.Column<Guid>(nullable: false),
+                    Created = table.Column<DateTime>(nullable: false),
+                    IsEnabled = table.Column<bool>(nullable: false),
+                    JournalId = table.Column<Guid>(nullable: true),
+                    LastModified = table.Column<DateTime>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subscriptionss", x => x.SubscriptionId);
+                    table.ForeignKey(
+                        name: "FK_Subscriptionss_Journals_JournalId",
+                        column: x => x.JournalId,
+                        principalTable: "Journals",
+                        principalColumn: "JournalId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Subscriptionss_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -334,6 +361,26 @@ namespace MedicalJournals.Entities.Migrations
                 column: "TagId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Publishers_CountryId",
+                table: "Publishers",
+                column: "CountryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Publishers_UserId",
+                table: "Publishers",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subscriptionss_JournalId",
+                table: "Subscriptionss",
+                column: "JournalId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subscriptionss_UserId",
+                table: "Subscriptionss",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
@@ -343,16 +390,6 @@ namespace MedicalJournals.Entities.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Publishers_CountryId",
-                table: "Publishers",
-                column: "CountryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Publishers_UserId",
-                table: "Publishers",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -389,6 +426,9 @@ namespace MedicalJournals.Entities.Migrations
                 name: "JournalTags");
 
             migrationBuilder.DropTable(
+                name: "Subscriptionss");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -404,10 +444,10 @@ namespace MedicalJournals.Entities.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Journals");
+                name: "Tags");
 
             migrationBuilder.DropTable(
-                name: "Tags");
+                name: "Journals");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
