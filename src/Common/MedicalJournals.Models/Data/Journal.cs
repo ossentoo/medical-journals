@@ -11,6 +11,8 @@ namespace MedicalJournals.Models.Data
         public Journal()
         {
             JournalId = Guid.NewGuid();
+            Created = DateTime.UtcNow;
+            LastModified = DateTime.UtcNow;
         }
 
         public Guid JournalId { get; set; }

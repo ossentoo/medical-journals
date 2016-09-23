@@ -9,6 +9,7 @@ namespace MedicalJournals.Models.Identity
         public ApplicationUser()
         {
             Id = Guid.NewGuid();
+            Created = DateTime.UtcNow;
         }
 
         public string FirstName { get; set; }
