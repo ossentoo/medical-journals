@@ -314,6 +314,16 @@ namespace MedicalJournals.Entities.Migrations
                 column: "NormalizedName");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Journals_CategoryId",
+                table: "Journals",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Journals_UserId",
+                table: "Journals",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_JournalTags_JournalId",
                 table: "JournalTags",
                 column: "JournalId");
@@ -333,16 +343,6 @@ namespace MedicalJournals.Entities.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Journals_CategoryId",
-                table: "Journals",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Journals_UserId",
-                table: "Journals",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Publishers_CountryId",

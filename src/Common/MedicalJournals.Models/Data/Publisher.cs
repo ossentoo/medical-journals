@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using MedicalJournals.Models.Data;
 using MedicalJournals.Models.Identity;
 
 namespace MedicalJournals.Models

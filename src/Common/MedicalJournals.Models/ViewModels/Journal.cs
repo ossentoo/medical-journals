@@ -1,5 +1,6 @@
 ﻿using System;
 using AutoMapper;
+using MedicalJournals.Models.Data;
 using MedicalJournals.Models.Interfaces;
 
 namespace MedicalJournals.Models.ViewModels

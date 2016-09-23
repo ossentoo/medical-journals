@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MedicalJournals.Models;
+using MedicalJournals.Models.Data;
 
 namespace MedicalJournals.Data.Mock
 {

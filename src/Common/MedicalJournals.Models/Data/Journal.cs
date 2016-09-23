@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using MedicalJournals.Helpers;
-using MedicalJournals.Models.Data;
 
-namespace MedicalJournals.Models
+namespace MedicalJournals.Models.Data
 {
     public class Journal
     {

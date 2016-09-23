@@ -85,6 +85,69 @@ namespace MedicalJournals.Entities.Migrations
                     b.ToTable("Countries");
                 });
 
+            modelBuilder.Entity("MedicalJournals.Models.Data.Journal", b =>
+                {
+                    b.Property<long>("JournalId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<long?>("BlockCount");
+
+                    b.Property<int>("CategoryId");
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("FileName");
+
+                    b.Property<long?>("FileSize");
+
+                    b.Property<short?>("Height");
+
+                    b.Property<bool?>("IsEnabled");
+
+                    b.Property<bool?>("IsParentalAdvisory");
+
+                    b.Property<bool?>("IsPublic");
+
+                    b.Property<bool?>("IsUploadComplete");
+
+                    b.Property<DateTime>("LastModified");
+
+                    b.Property<DateTime?>("LastViewed");
+
+                    b.Property<string>("OverviewThumbnailPath");
+
+                    b.Property<string>("QueryId");
+
+                    b.Property<byte?>("ResolutionId");
+
+                    b.Property<int?>("TimeSpan");
+
+                    b.Property<string>("Title");
+
+                    b.Property<DateTime?>("UploadFinishTime");
+
+                    b.Property<DateTime?>("UploadStartTime");
+
+                    b.Property<string>("UploadStatusMessage")
+                        .HasAnnotation("MaxLength", 1024);
+
+                    b.Property<Guid>("UserId");
+
+                    b.Property<long?>("ViewCount");
+
+                    b.Property<short?>("Width");
+
+                    b.HasKey("JournalId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Journals");
+                });
+
             modelBuilder.Entity("MedicalJournals.Models.Data.JournalTag", b =>
                 {
                     b.Property<long>("JournalId");
@@ -168,69 +231,6 @@ namespace MedicalJournals.Entities.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("MedicalJournals.Models.Journal", b =>
-                {
-                    b.Property<long>("JournalId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long?>("BlockCount");
-
-                    b.Property<int>("CategoryId");
-
-                    b.Property<DateTime>("Created");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("FileName");
-
-                    b.Property<long?>("FileSize");
-
-                    b.Property<short?>("Height");
-
-                    b.Property<bool?>("IsEnabled");
-
-                    b.Property<bool?>("IsParentalAdvisory");
-
-                    b.Property<bool?>("IsPublic");
-
-                    b.Property<bool?>("IsUploadComplete");
-
-                    b.Property<DateTime>("LastModified");
-
-                    b.Property<DateTime?>("LastViewed");
-
-                    b.Property<string>("OverviewThumbnailPath");
-
-                    b.Property<string>("QueryId");
-
-                    b.Property<byte?>("ResolutionId");
-
-                    b.Property<int?>("TimeSpan");
-
-                    b.Property<string>("Title");
-
-                    b.Property<DateTime?>("UploadFinishTime");
-
-                    b.Property<DateTime?>("UploadStartTime");
-
-                    b.Property<string>("UploadStatusMessage")
-                        .HasAnnotation("MaxLength", 1024);
-
-                    b.Property<Guid>("UserId");
-
-                    b.Property<long?>("ViewCount");
-
-                    b.Property<short?>("Width");
-
-                    b.HasKey("JournalId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Journals");
                 });
 
             modelBuilder.Entity("MedicalJournals.Models.Publisher", b =>
@@ -342,18 +342,7 @@ namespace MedicalJournals.Entities.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("MedicalJournals.Models.Data.JournalTag", b =>
-                {
-                    b.HasOne("MedicalJournals.Models.Journal", "Journal")
-                        .WithMany("JournalTags")
-                        .HasForeignKey("JournalId");
-
-                    b.HasOne("MedicalJournals.Models.Data.Tag", "Tag")
-                        .WithMany("JournalTags")
-                        .HasForeignKey("TagId");
-                });
-
-            modelBuilder.Entity("MedicalJournals.Models.Journal", b =>
+            modelBuilder.Entity("MedicalJournals.Models.Data.Journal", b =>
                 {
                     b.HasOne("MedicalJournals.Models.Data.Category", "Category")
                         .WithMany("Journals")
@@ -364,6 +353,17 @@ namespace MedicalJournals.Entities.Migrations
                         .WithMany("Journals")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MedicalJournals.Models.Data.JournalTag", b =>
+                {
+                    b.HasOne("MedicalJournals.Models.Data.Journal", "Journal")
+                        .WithMany("JournalTags")
+                        .HasForeignKey("JournalId");
+
+                    b.HasOne("MedicalJournals.Models.Data.Tag", "Tag")
+                        .WithMany("JournalTags")
+                        .HasForeignKey("TagId");
                 });
 
             modelBuilder.Entity("MedicalJournals.Models.Publisher", b =>
