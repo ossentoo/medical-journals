@@ -210,7 +210,7 @@ namespace MedicalJournals.Entities.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Subscriptionss");
+                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("MedicalJournals.Models.Data.Tag", b =>

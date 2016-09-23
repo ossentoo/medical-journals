@@ -308,7 +308,7 @@ namespace MedicalJournals.Entities.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Subscriptionss",
+                name: "Subscriptions",
                 columns: table => new
                 {
                     SubscriptionId = table.Column<Guid>(nullable: false),
@@ -320,15 +320,15 @@ namespace MedicalJournals.Entities.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Subscriptionss", x => x.SubscriptionId);
+                    table.PrimaryKey("PK_Subscriptions", x => x.SubscriptionId);
                     table.ForeignKey(
-                        name: "FK_Subscriptionss_Journals_JournalId",
+                        name: "FK_Subscriptions_Journals_JournalId",
                         column: x => x.JournalId,
                         principalTable: "Journals",
                         principalColumn: "JournalId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Subscriptionss_AspNetUsers_UserId",
+                        name: "FK_Subscriptions_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -371,13 +371,13 @@ namespace MedicalJournals.Entities.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Subscriptionss_JournalId",
-                table: "Subscriptionss",
+                name: "IX_Subscriptions_JournalId",
+                table: "Subscriptions",
                 column: "JournalId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Subscriptionss_UserId",
-                table: "Subscriptionss",
+                name: "IX_Subscriptions_UserId",
+                table: "Subscriptions",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -426,7 +426,7 @@ namespace MedicalJournals.Entities.Migrations
                 name: "JournalTags");
 
             migrationBuilder.DropTable(
-                name: "Subscriptionss");
+                name: "Subscriptions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");

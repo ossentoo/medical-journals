@@ -16,7 +16,7 @@ namespace MedicalJournals.Entities
         public DbSet<Journal> Journals { get; set; }
         public DbSet<JournalTag> JournalTags { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
-        public DbSet<Subscription> Subscriptionss { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
 
         public JournalContext(DbContextOptions options)
             : base(options)

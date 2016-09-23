@@ -1,9 +1,12 @@
 ﻿
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using MedicalJournals.Models.Data;
 using MedicalJournals.Models.Identity;
 
 namespace MedicalJournals.Models.Data
 {
+    [Table("Subscriptions")]
     public class Subscription
     {
         public Subscription()

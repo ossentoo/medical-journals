@@ -8,7 +8,7 @@ using MedicalJournals.Entities;
 namespace MedicalJournals.Entities.Migrations
 {
     [DbContext(typeof(JournalContext))]
-    [Migration("20160923221055_Initial")]
+    [Migration("20160923221803_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -211,7 +211,7 @@ namespace MedicalJournals.Entities.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Subscriptionss");
+                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("MedicalJournals.Models.Data.Tag", b =>
