@@ -12,6 +12,7 @@ namespace MedicalJournals.Entities
     public class JournalContext : IdentityDbContext<ApplicationUser, JournalRole, Guid>
     {
         public DbSet<Application> Applications { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Journal> Journals { get; set; }
         public DbSet<JournalTag> JournalTags { get; set; }

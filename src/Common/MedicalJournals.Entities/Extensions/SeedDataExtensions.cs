@@ -33,7 +33,6 @@ namespace MedicalJournals.Entities.Extensions
 
                 ApplyData(context, userManager, roleManager);                    
             }
-
         }
 
         private static void ApplyData(JournalContext context, UserManager<ApplicationUser> userManager, RoleManager<JournalRole> roleManager)
@@ -42,9 +41,32 @@ namespace MedicalJournals.Entities.Extensions
             {
                 context.Database.OpenConnection();
 
+                if (!context.Categories.Any())
+                {
+                    context.Database.ExecuteSqlCommand(@"SET IDENTITY_INSERT [dbo].[Categories] ON");
+                    context.Categories.AddRange(
+                        new Category { CategoryId = 1, CategoryName = "Anthropology" },
+                        new Category { CategoryId = 2, CategoryName = "Archaeology" },
+                        new Category { CategoryId = 3, CategoryName = "Engineering" },
+                        new Category { CategoryId = 4, CategoryName = "Geography" },
+                        new Category { CategoryId = 5, CategoryName = "History" },
+                        new Category { CategoryId = 6, CategoryName = "Law" },
+                        new Category { CategoryId = 7, CategoryName = "Materials Science" },
+                        new Category { CategoryId = 8, CategoryName = "Mathematics" },
+                        new Category { CategoryId = 9, CategoryName = "Nutrition" },
+                        new Category { CategoryId = 10, CategoryName = "Other" },
+                        new Category { CategoryId = 11, CategoryName = "Physics" },
+                        new Category { CategoryId = 12, CategoryName = "Statistics and Probability" }
+                    );
+
+                    context.SaveChanges();
+                    _logger.LogDebug("Completed Categories table updates with {0} rows.", context.Categories.Count());
+                    context.Database.ExecuteSqlCommand(@"SET IDENTITY_INSERT [dbo].[Categories] OFF");
+                }
+
                 if (!context.Countries.Any())
                 {
-                    context.Database.ExecuteSqlCommand(@"SET IDENTITY_INSERT [training].[dbo].[countries] ON");
+                    context.Database.ExecuteSqlCommand(@"SET IDENTITY_INSERT [dbo].[countries] ON");
                     context.Countries.AddRange(
                             new Country { CountryId = 1, CountryName = "Algeria", CountryCode = "AL", IsEnabled = false },
                             new Country { CountryId = 2, CountryName = "Angola", CountryCode = "AN", IsEnabled = false },
@@ -106,48 +128,13 @@ namespace MedicalJournals.Entities.Extensions
                     );
 
                     context.SaveChanges();
-                    context.Database.ExecuteSqlCommand(@"SET IDENTITY_INSERT [training].[dbo].[countries] OFF");
+                    context.Database.ExecuteSqlCommand(@"SET IDENTITY_INSERT [dbo].[Countries] OFF");
                     _logger.LogDebug("Completed Countries table updates with {0} rows.", context.Countries.Count());
                 }
 
                 InitializeIdentity(userManager, roleManager);
 
             }
-
-
-            //            var category1 = new Category { CategoryId = 1, CategoryName = "Music" };
-            //            var category2 = new Category { CategoryId = 2, CategoryName = "Sport" };
-            //            var category3 = new Category { CategoryId = 3, CategoryName = "Movies" };
-            //            var category4 = new Category { CategoryId = 4, CategoryName = "TV" };
-            //            var category5 = new Category { CategoryId = 5, CategoryName = "Education" };
-            //            var category6 = new Category { CategoryId = 6, CategoryName = "You" };
-            //            var category7 = new Category { CategoryId = 3, CategoryName = "Movie Trailers" };
-            //            context.Categories.AddOrUpdate(x => x.CategoryId, category1, category2, category3, category4, category5, category6, category7);
-            //            Logger.LogFormat(LogType.Debug, "Completed Categories table updates with {0} rows.", context.Categories.Count());
-
-
-            //            var cardType1 = new CardType { CardTypeId = 1, CardTypeName = "Visa", DisplayOrder = 1 };
-            //            var cardType2 = new CardType { CardTypeId = 2, CardTypeName = "Mastercard", DisplayOrder = 2 };
-            //            var cardType3 = new CardType { CardTypeId = 3, CardTypeName = "Amex", DisplayOrder = 3 };
-            //            var cardType4 = new CardType { CardTypeId = 4, CardTypeName = "Discover", DisplayOrder = 4 };
-            //            context.CardTypes.AddOrUpdate(x => x.CardTypeId, cardType1, cardType2, cardType3, cardType4);
-            //            Logger.LogFormat(LogType.Debug, "Completed CardTypes table updates with {0} rows.", context.CardTypes.Count());
-
-            //            var currency1 = new Currency { CurrencyId = 1, CurrencyName = "Pound Sterling", Acronum = "GBP", Symbol = "£", DisplayOrder = 1, IsEnabled = false };
-            //            var currency2 = new Currency { CurrencyId = 2, CurrencyName = "US Dollar", Acronum = "USD", Symbol = "£", DisplayOrder = 2, IsEnabled = false };
-            //            var currency3 = new Currency { CurrencyId = 3, CurrencyName = "Euro", Acronum = "EUR", Symbol = "€", DisplayOrder = 3, IsEnabled = false };
-            //            context.Currencies.AddOrUpdate(x => x.CurrencyId, currency1, currency2, currency3);
-            //            Logger.LogFormat(LogType.Debug, "Completed Currencies table updates with {0} rows.", context.Currencies.Count());
-            //
-            //
-
-
-            //            Logger.LogFormat(LogType.Debug, "Completed Countries table updates with {0} rows.", context.Countries.Count());
-            //            var txType1 = new TransactionType { TransactionTypeId = 1, TransactionTypeName = "Payment" };
-            //            var txType2 = new TransactionType { TransactionTypeId = 2, TransactionTypeName = "Capture" };
-            //            context.TransactionTypes.AddOrUpdate(x => x.TransactionTypeId, txType1, txType2);
-            //            Logger.LogFormat(LogType.Debug, "Completed TransactionTypes table updates with {0} rows.", context.TransactionTypes.Count());
-
         }
 
         //Create User=Admin@Admin.com with password=123456 in the Admin role        
