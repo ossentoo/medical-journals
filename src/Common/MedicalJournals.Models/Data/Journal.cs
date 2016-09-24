@@ -18,6 +18,7 @@ namespace MedicalJournals.Models.Data
         public Guid JournalId { get; set; }
         public int CategoryId { get; set; }
 
+        [Required]
         public string Title { get; set; }
 
         public string Description { get; set; }
@@ -26,6 +27,7 @@ namespace MedicalJournals.Models.Data
 
         public DateTime LastModified { get; set; }
 
+        [Required]
         public Guid UserId { get; set; }
 
         public bool? IsEnabled { get; set; }
@@ -64,6 +66,7 @@ namespace MedicalJournals.Models.Data
 
         public byte? ResolutionId { get; set; }
         public bool? IsParentalAdvisory { get; set; }
+        public byte[] File { get; set; }
 
         public virtual Publisher Publisher { get; set; }
         public virtual Category Category { get; set; }

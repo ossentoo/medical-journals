@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MedicalJournals.Models.Data
@@ -13,6 +14,7 @@ namespace MedicalJournals.Models.Data
         }
 
         public int CategoryId { get; set; }
+        [Required]
         public string CategoryName { get; set; }
 
         public virtual ICollection<Journal> Journals { get; set; }

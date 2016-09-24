@@ -15,8 +15,10 @@ namespace MedicalJournals.Models.Data
         public int CountryId { get; set; }
 
         [StringLength(255, MinimumLength = 1)]
+        [Required]
         public string CountryName { get; set; }
         [StringLength(3, MinimumLength = 1)]
+        [Required]
         public string CountryCode { get; set; }
         public bool IsEnabled { get; set; }
 

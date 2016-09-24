@@ -44,7 +44,7 @@ namespace MedicalJournals.Entities.Migrations
                 {
                     CategoryId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CategoryName = table.Column<string>(nullable: true)
+                    CategoryName = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,8 +57,8 @@ namespace MedicalJournals.Entities.Migrations
                 {
                     CountryId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CountryCode = table.Column<string>(maxLength: 3, nullable: true),
-                    CountryName = table.Column<string>(maxLength: 255, nullable: true),
+                    CountryCode = table.Column<string>(maxLength: 3, nullable: false),
+                    CountryName = table.Column<string>(maxLength: 255, nullable: false),
                     IsEnabled = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -147,12 +147,12 @@ namespace MedicalJournals.Entities.Migrations
                 columns: table => new
                 {
                     PublisherId = table.Column<Guid>(nullable: false),
-                    CountryId = table.Column<int>(nullable: true),
+                    CountryId = table.Column<int>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     IsEnabled = table.Column<bool>(nullable: false),
                     LastModified = table.Column<DateTime>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    UserId = table.Column<Guid>(nullable: true)
+                    Name = table.Column<string>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -162,13 +162,13 @@ namespace MedicalJournals.Entities.Migrations
                         column: x => x.CountryId,
                         principalTable: "Countries",
                         principalColumn: "CountryId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Publishers_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -245,6 +245,7 @@ namespace MedicalJournals.Entities.Migrations
                     CategoryId = table.Column<int>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     Description = table.Column<string>(nullable: true),
+                    File = table.Column<byte[]>(nullable: true),
                     FileName = table.Column<string>(nullable: true),
                     FileSize = table.Column<long>(nullable: true),
                     Height = table.Column<short>(nullable: true),
@@ -258,7 +259,7 @@ namespace MedicalJournals.Entities.Migrations
                     QueryId = table.Column<string>(nullable: true),
                     ResolutionId = table.Column<byte>(nullable: true),
                     TimeSpan = table.Column<int>(nullable: true),
-                    Title = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: false),
                     UploadFinishTime = table.Column<DateTime>(nullable: true),
                     UploadStartTime = table.Column<DateTime>(nullable: true),
                     UploadStatusMessage = table.Column<string>(maxLength: 1024, nullable: true),
@@ -314,9 +315,9 @@ namespace MedicalJournals.Entities.Migrations
                     SubscriptionId = table.Column<Guid>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     IsEnabled = table.Column<bool>(nullable: false),
-                    JournalId = table.Column<Guid>(nullable: true),
+                    JournalId = table.Column<Guid>(nullable: false),
                     LastModified = table.Column<DateTime>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: true)
+                    UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -326,13 +327,13 @@ namespace MedicalJournals.Entities.Migrations
                         column: x => x.JournalId,
                         principalTable: "Journals",
                         principalColumn: "JournalId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Subscriptions_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(

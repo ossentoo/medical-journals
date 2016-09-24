@@ -8,7 +8,7 @@ using MedicalJournals.Entities;
 namespace MedicalJournals.Entities.Migrations
 {
     [DbContext(typeof(JournalContext))]
-    [Migration("20160923221803_Initial")]
+    [Migration("20160924070341_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,7 +61,8 @@ namespace MedicalJournals.Entities.Migrations
                     b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("CategoryName");
+                    b.Property<string>("CategoryName")
+                        .IsRequired();
 
                     b.HasKey("CategoryId");
 
@@ -74,9 +75,11 @@ namespace MedicalJournals.Entities.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("CountryCode")
+                        .IsRequired()
                         .HasAnnotation("MaxLength", 3);
 
                     b.Property<string>("CountryName")
+                        .IsRequired()
                         .HasAnnotation("MaxLength", 255);
 
                     b.Property<bool>("IsEnabled");
@@ -98,6 +101,8 @@ namespace MedicalJournals.Entities.Migrations
                     b.Property<DateTime>("Created");
 
                     b.Property<string>("Description");
+
+                    b.Property<byte[]>("File");
 
                     b.Property<string>("FileName");
 
@@ -125,7 +130,8 @@ namespace MedicalJournals.Entities.Migrations
 
                     b.Property<int?>("TimeSpan");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .IsRequired();
 
                     b.Property<DateTime?>("UploadFinishTime");
 
@@ -169,7 +175,8 @@ namespace MedicalJournals.Entities.Migrations
                     b.Property<Guid>("PublisherId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("CountryId");
+                    b.Property<int?>("CountryId")
+                        .IsRequired();
 
                     b.Property<DateTime>("Created");
 
@@ -177,9 +184,10 @@ namespace MedicalJournals.Entities.Migrations
 
                     b.Property<DateTime>("LastModified");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
-                    b.Property<Guid?>("UserId");
+                    b.Property<Guid>("UserId");
 
                     b.HasKey("PublisherId");
 
@@ -199,11 +207,13 @@ namespace MedicalJournals.Entities.Migrations
 
                     b.Property<bool>("IsEnabled");
 
-                    b.Property<Guid?>("JournalId");
+                    b.Property<Guid?>("JournalId")
+                        .IsRequired();
 
                     b.Property<DateTime>("LastModified");
 
-                    b.Property<Guid?>("UserId");
+                    b.Property<Guid?>("UserId")
+                        .IsRequired();
 
                     b.HasKey("SubscriptionId");
 
@@ -393,24 +403,28 @@ namespace MedicalJournals.Entities.Migrations
 
             modelBuilder.Entity("MedicalJournals.Models.Data.Publisher", b =>
                 {
-                    b.HasOne("MedicalJournals.Models.Data.Country")
+                    b.HasOne("MedicalJournals.Models.Data.Country", "Country")
                         .WithMany("Publishers")
-                        .HasForeignKey("CountryId");
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MedicalJournals.Models.Identity.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MedicalJournals.Models.Data.Subscription", b =>
                 {
                     b.HasOne("MedicalJournals.Models.Data.Journal", "Journal")
                         .WithMany()
-                        .HasForeignKey("JournalId");
+                        .HasForeignKey("JournalId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MedicalJournals.Models.Identity.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<System.Guid>", b =>
