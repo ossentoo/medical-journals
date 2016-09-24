@@ -5,6 +5,11 @@
 
   "dependencies": {
     "dotnet-test-mstest": "1.1.1-preview",
+    "MedicalJournals.Entities": "1.0.0-*",
+    "Microsoft.AspNetCore.TestHost": "1.0.0",
+    "Microsoft.EntityFrameworkCore": "1.0.1",
+    "Microsoft.EntityFrameworkCore.InMemory": "1.0.1",
+    "Moq": "4.6.38-alpha",
     "MSTest.TestFramework": "1.0.1-preview"
   },
 
