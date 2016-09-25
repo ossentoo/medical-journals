@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using MedicalJournals.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

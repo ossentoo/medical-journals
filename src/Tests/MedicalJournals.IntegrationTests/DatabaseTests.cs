@@ -18,8 +18,6 @@ namespace MedicalJournals.IntegrationTests
         private static TestServer _server;
         private static HttpClient _client;
 
-
-
         private static DbContextOptions<JournalContext> CreateNewContextOptions()
         {
             // Create a fresh service provider, and therefore a fresh 

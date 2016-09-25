@@ -67,6 +67,7 @@ namespace MedicalJournals.Models.Data
         public byte? ResolutionId { get; set; }
         public bool? IsParentalAdvisory { get; set; }
         public byte[] File { get; set; }
+        public decimal Price { get; set; }
 
         public virtual Publisher Publisher { get; set; }
         public virtual Category Category { get; set; }

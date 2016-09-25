@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MedicalJournals.Entities.Extensions;
+using MedicalJournals.Web.Properties;
 
 namespace MedicalJournals.Web
 {
@@ -32,6 +33,10 @@ namespace MedicalJournals.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            // Add session related services.
+            services.AddSession();
+
             // Add framework services.
             services.AddEntityFramework()
                 .AddEntityFrameworkSqlServer()
@@ -55,6 +60,8 @@ namespace MedicalJournals.Web
                 .AddUserStore<UserStore<ApplicationUser, JournalRole, JournalContext, Guid>>()
                 .AddRoleStore<RoleStore<JournalRole, JournalContext, Guid>>();
 
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
             // Add framework services.
             services.AddMvc();
         }
@@ -64,6 +71,9 @@ namespace MedicalJournals.Web
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            // Configure Session.
+            app.UseSession();
 
             if (env.IsDevelopment())
             {
@@ -81,6 +91,7 @@ namespace MedicalJournals.Web
 
             app.UseStaticFiles();
             app.UseIdentity();
+
 
             app.UseMvc(routes =>
             {

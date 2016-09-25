@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using System.Threading.Tasks
+@using MedicalJournals.Web.Properties
+@using Microsoft.Extensions.Options
+@inject IOptions<AppSettings> AppSettings
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -21,20 +25,19 @@
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">MedicalJournals</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">@AppSettings.Value.SiteTitle</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    <li><a asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
+                    @await Component.InvokeAsync("CategoryMenu")
+                    @await Component.InvokeAsync("CartSummary")
                 </ul>
+                @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
     </div>

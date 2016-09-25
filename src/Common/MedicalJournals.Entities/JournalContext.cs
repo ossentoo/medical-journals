@@ -1,6 +1,5 @@
 ﻿using System;
 using MedicalJournals.Identity;
-using MedicalJournals.Models;
 using MedicalJournals.Models.Data;
 using MedicalJournals.Models.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -12,10 +11,12 @@ namespace MedicalJournals.Entities
     public class JournalContext : IdentityDbContext<ApplicationUser, JournalRole, Guid>
     {
         public DbSet<Application> Applications { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Journal> Journals { get; set; }
         public DbSet<JournalTag> JournalTags { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
 
@@ -79,7 +80,6 @@ namespace MedicalJournals.Entities
                     .WithMany(t => t.JournalTags)
                     .HasForeignKey(d => d.JournalId)
                     .OnDelete(DeleteBehavior.Restrict);
-
             });
         }
     }

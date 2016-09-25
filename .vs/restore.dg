@@ -1,5 +1,5 @@
-#:C:\git\ossentoo\medical-journals\src\Tests\MedicalJournals.IntegrationTests\MedicalJournals.IntegrationTests.xproj
-C:\git\ossentoo\medical-journals\src\Tests\MedicalJournals.IntegrationTests\MedicalJournals.IntegrationTests.xproj|C:\git\ossentoo\medical-journals\src\Common\MedicalJournals.Entities\MedicalJournals.Entities.xproj
+#:C:\git\ossentoo\medical-journals\src\MedicalJournals.Web\MedicalJournals.Web.xproj
+C:\git\ossentoo\medical-journals\src\MedicalJournals.Web\MedicalJournals.Web.xproj|C:\git\ossentoo\medical-journals\src\Common\MedicalJournals.Entities\MedicalJournals.Entities.xproj
 C:\git\ossentoo\medical-journals\src\Common\MedicalJournals.Entities\MedicalJournals.Entities.xproj|C:\git\ossentoo\medical-journals\src\Common\MedicalJournals.Data\MedicalJournals.Data.xproj
 C:\git\ossentoo\medical-journals\src\Common\MedicalJournals.Entities\MedicalJournals.Entities.xproj|C:\git\ossentoo\medical-journals\src\Common\MedicalJournals.Identity\MedicalJournals.Identity.xproj
 C:\git\ossentoo\medical-journals\src\Common\MedicalJournals.Entities\MedicalJournals.Entities.xproj|C:\git\ossentoo\medical-journals\src\Common\MedicalJournals.Models\MedicalJournals.Models.xproj
