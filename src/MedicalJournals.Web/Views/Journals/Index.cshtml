@@ -1,15 +1,19 @@
-﻿@model IEnumerable<MedicalJournals.Models.Data.Category>
+﻿@using System.Collections.Generic
+@using MedicalJournals.Models.Data
+@using Microsoft.AspNetCore.Mvc.Razor
+
+@model IEnumerable<Category>
 @{
-    ViewBag.Title = "Store";
+    ViewBag.Title = "Journals";
 }
 <h3>Browse Categories</h3>
 
 <p>
-    Select from @Model.Count() genres:
+    Select from @Model.Count() categories:
 </p>
 <ul class="list-group">
     @foreach (var category in Model)
     {
-        <li class="list-group-item"><a asp-controller="Journals" asp-action="Browse" asp-route-genre="@category.CategoryName">@category.CategoryName</a></li>
+        <li class="list-group-item"><a asp-controller="Journals" asp-action="Browse" asp-route-category="@category.CategoryName">@category.CategoryName</a></li>
     }
 </ul>

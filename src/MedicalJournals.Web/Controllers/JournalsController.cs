@@ -31,7 +31,7 @@ namespace MedicalJournals.Web.Controllers
         }
 
         //
-        // GET: /Journals/Browse?genre=Disco
+        // GET: /Journals/Browse?category=
         public async Task<IActionResult> Browse(string category)
         {
             // Retrieve category and its associated journals from database

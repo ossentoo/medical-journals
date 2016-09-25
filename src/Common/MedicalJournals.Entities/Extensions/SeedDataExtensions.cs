@@ -63,18 +63,29 @@ namespace MedicalJournals.Entities.Extensions
                 SwitchIdentity(context, "Categories", true, isInMemoryDatabase);
 
                 context.Categories.AddRange(
-                    new Category { CategoryId = 1, CategoryName = "Anthropology" },
-                    new Category { CategoryId = 2, CategoryName = "Archaeology" },
-                    new Category { CategoryId = 3, CategoryName = "Engineering" },
-                    new Category { CategoryId = 4, CategoryName = "Geography" },
-                    new Category { CategoryId = 5, CategoryName = "History" },
-                    new Category { CategoryId = 6, CategoryName = "Law" },
-                    new Category { CategoryId = 7, CategoryName = "Materials Science" },
-                    new Category { CategoryId = 8, CategoryName = "Mathematics" },
-                    new Category { CategoryId = 9, CategoryName = "Nutrition" },
-                    new Category { CategoryId = 10, CategoryName = "Other" },
-                    new Category { CategoryId = 11, CategoryName = "Physics" },
-                    new Category { CategoryId = 12, CategoryName = "Statistics and Probability" }
+                    new Category { CategoryId = 1, CategoryName = "Alternative and traditional" },
+                    new Category { CategoryId = 2, CategoryName = "Anatomy" },
+                    new Category { CategoryId = 3, CategoryName = "Anesthesiology and palliative medicine" },
+                    new Category { CategoryId = 4, CategoryName = "Behavioral" },
+                    new Category { CategoryId = 5, CategoryName = "Cardiology" },
+                    new Category { CategoryId = 6, CategoryName = "Dentistry" },
+                    new Category { CategoryId = 7, CategoryName = "Dermatology" },
+                    new Category { CategoryId = 8, CategoryName = "Epidemiology" },
+                    new Category { CategoryId = 9, CategoryName = "Gastroenterology and hepatology" },
+                    new Category { CategoryId = 10, CategoryName = "Hematology" },
+                    new Category { CategoryId = 11, CategoryName = "Immunology" },
+                    new Category { CategoryId = 12, CategoryName = "Laboratory" },
+                    new Category { CategoryId = 13, CategoryName = "Microbiology" },
+                    new Category { CategoryId = 14, CategoryName = "Neurology" },
+                    new Category { CategoryId = 15, CategoryName = "Nutrition" },
+                    new Category { CategoryId = 16, CategoryName = "Oncology" },
+                    new Category { CategoryId = 17, CategoryName = "Pediatrics" },
+                    new Category { CategoryId = 18, CategoryName = "Psychiatry" },
+                    new Category { CategoryId = 19, CategoryName = "Rheumatology" },
+                    new Category { CategoryId = 20, CategoryName = "Sports medicine" },
+                    new Category { CategoryId = 21, CategoryName = "Toxicology" },
+                    new Category { CategoryId = 22, CategoryName = "Urology" },
+                    new Category { CategoryId = 23, CategoryName = "Veterinary" }
                 );
 
                 context.SaveChanges();
