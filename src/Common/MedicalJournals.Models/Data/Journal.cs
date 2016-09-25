@@ -45,7 +45,7 @@ namespace MedicalJournals.Models.Data
 
         public int? TimeSpan { get; set; }
 
-        public string OverviewThumbnailPath { get; set; }
+        public string ImageUrl { get; set; }
 
         public string QueryId { get; set; }
 

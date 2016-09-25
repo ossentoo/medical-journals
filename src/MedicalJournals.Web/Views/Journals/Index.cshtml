@@ -1,0 +1,15 @@
+﻿@model IEnumerable<MedicalJournals.Models.Data.Category>
+@{
+    ViewBag.Title = "Store";
+}
+<h3>Browse Categories</h3>
+
+<p>
+    Select from @Model.Count() genres:
+</p>
+<ul class="list-group">
+    @foreach (var category in Model)
+    {
+        <li class="list-group-item"><a asp-controller="Journals" asp-action="Browse" asp-route-genre="@category.CategoryName">@category.CategoryName</a></li>
+    }
+</ul>

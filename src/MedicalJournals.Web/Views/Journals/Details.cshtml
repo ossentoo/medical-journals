@@ -1,0 +1,31 @@
+﻿@using System.Threading.Tasks
+@using MedicalJournals.Models.Data
+@model Journal
+
+@{
+    ViewBag.Title = "Journal - " + Model.Title;
+}
+
+<h2>@Model.Title</h2>
+
+<p>
+    <img alt="@Model.Title" src="@Url.Content(@Model.ImageUrl)" />
+</p>
+
+<div id="album-details">
+    <p>
+        <em>Category:</em>
+        @Model.Category.CategoryName
+    </p>
+    <p>
+        <em>Publisher:</em>
+        @Model.Publisher.Name
+    </p>
+    <p>
+        <em>Price:</em>
+        <label>@Model.Price</label>
+    </p>
+    <p class="button">
+        <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@Model.JournalId">Add to cart</a>
+    </p>
+</div>

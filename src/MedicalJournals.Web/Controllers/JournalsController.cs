@@ -11,33 +11,31 @@ using MedicalJournals.Models.Data;
 
 namespace MedicalJournals.Web.Controllers
 {
-    public class StoreController : Controller
+    public class JournalsController : Controller
     {
+        private readonly JournalContext _context;
         private readonly AppSettings _appSettings;
 
-        public StoreController(JournalContext context, IOptions<AppSettings> options)
+        public JournalsController([FromServices]JournalContext context, IOptions<AppSettings> options)
         {
-            context = context;
+            _context = context;
             _appSettings = options.Value;
         }
-
-        public JournalContext context { get; }
-
         //
         // GET: /Store/
         public async Task<IActionResult> Index()
         {
-            var genres = await context.Categories.ToListAsync();
+            var categories = await _context.Categories.ToListAsync();
 
-            return View(genres);
+            return View(categories);
         }
 
         //
-        // GET: /Store/Browse?genre=Disco
+        // GET: /Journals/Browse?genre=Disco
         public async Task<IActionResult> Browse(string category)
         {
             // Retrieve category and its associated journals from database
-            var categoryModel = await context.Categories
+            var categoryModel = await _context.Categories
                 .Include(g => g.Journals)
                 .Where(g => g.CategoryName == category)
                 .FirstOrDefaultAsync();
@@ -58,7 +56,7 @@ namespace MedicalJournals.Web.Controllers
             Journal journal;
             if (!cache.TryGetValue(cacheKey, out journal))
             {
-                journal = await context.Journals
+                journal = await _context.Journals
                                 .Where(a => a.JournalId == id)
                                 .Include(a => a.Publisher)
                                 .Include(a => a.Category)

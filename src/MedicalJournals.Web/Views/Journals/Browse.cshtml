@@ -1,0 +1,26 @@
+﻿@using System.Threading.Tasks
+@using MedicalJournals.Models.Data
+@model Category
+@{
+    ViewBag.Title = "Browse Journals";
+}
+<div class="category">
+    <h3>
+        <em>@Model.CategoryName</em> Journals
+    </h3>
+
+    <ul id="album-list" class="list-unstyled">
+        @foreach (var journal in Model.Journals)
+        {
+            <li class="col-lg-2 col-md-2 col-sm-2 col-xs-4 container">
+                <a asp-controller="Journals" asp-action="Details" asp-route-id="@journal.JournalId">
+                    @if (!string.IsNullOrEmpty(journal.ImageUrl))
+                    {
+                        <img alt="@journal.Title" src="@Url.Content(journal.ImageUrl)" />
+                    }
+                    <h5 class="control-label">@journal.Title</h5>
+                </a>
+            </li>
+        }
+    </ul>
+</div>

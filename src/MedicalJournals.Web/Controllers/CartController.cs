@@ -11,11 +11,11 @@ using Microsoft.Extensions.Logging;
 
 namespace MedicalJournals.Web.Controllers
 {
-    public class ShoppingCartController : Controller
+    public class CartController : Controller
     {
-        private readonly ILogger<ShoppingCartController> _logger;
+        private readonly ILogger<CartController> _logger;
 
-        public ShoppingCartController(JournalContext context, ILogger<ShoppingCartController> logger)
+        public CartController(JournalContext context, ILogger<CartController> logger)
         {
             context = context;
             _logger = logger;

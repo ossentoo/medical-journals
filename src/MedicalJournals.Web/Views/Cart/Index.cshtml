@@ -1,4 +1,6 @@
-@model MusicStore.ViewModels.ShoppingCartViewModel
+@using System.Threading.Tasks
+@using MedicalJournals.Models.ViewModels
+@model CartViewModel
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 @{
     ViewBag.Title = "Shopping Cart";
@@ -77,17 +79,17 @@
     {
         <tr id="row-@item.CartItemId">
             <td>
-                <a asp-controller="Store" asp-action="Details" asp-route-id="@item.AlbumId">@item.Album.Title</a>
+                <a asp-controller="Journals" asp-action="Details" asp-route-id="@item.JournalId">@item.Journal.Title</a>
             </td>
             <td>
-                @item.Album.Price
+                @item.Journal.Price
             </td>
             <td id="item-count-@item.CartItemId">
                 @item.Count
             </td>
             <td>
                 <a href="#" class="RemoveLink" data-id="@item.CartItemId"
-                   data-url='@Url.Content("~/ShoppingCart/RemoveFromCart")'>
+                   data-url='@Url.Content("~/Cart/RemoveFromCart")'>
                     Remove from cart
                 </a>
             </td>
