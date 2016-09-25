@@ -92,12 +92,22 @@ namespace MedicalJournals.Web
             app.UseStaticFiles();
             app.UseIdentity();
 
-
+            // Add MVC to the request pipeline
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
+                    name: "areaRoute",
+                    template: "{area:exists}/{controller}/{action}",
+                    defaults: new { action = "Index" });
+
+                routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller}/{action}/{id?}",
+                    defaults: new { controller = "Home", action = "Index" });
+
+                routes.MapRoute(
+                    name: "api",
+                    template: "{controller}/{id?}");
             });
         }
     }
