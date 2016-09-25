@@ -13,7 +13,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Album</h4>
+        <h4>Journal</h4>
         <hr />
         @Html.ValidationSummary(true)
         @Html.HiddenFor(model => model.JournalId)
@@ -21,7 +21,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CategoryId, "CategoryId", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("GenreId", String.Empty)
+                @Html.DropDownList("CategoryId", String.Empty)
                 @Html.ValidationMessageFor(model => model.CategoryId)
             </div>
         </div>
@@ -29,8 +29,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Publisher.PublisherId, "PublisherId", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("ArtistId", String.Empty)
-                @Html.ValidationMessageFor(model => model.PublisherId)
+                @Html.DropDownList("PublisherId", String.Empty)
+                @Html.ValidationMessageFor(model => model.Publisher.PublisherId)
             </div>
         </div>
 

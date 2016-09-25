@@ -19,6 +19,11 @@ namespace MedicalJournals.Entities.Extensions
     {
         private static ILogger _logger;
         private static JournalContext _context;
+        private static bool _isInMemoryDatabase;
+        private static UserManager<ApplicationUser> _userManager;
+        private static RoleManager<JournalRole> _roleManager;
+        private const string DefaultUserName = "ossent@yahoo.co.uk";
+        private const string DefaultPublisher = "The American Orthopaedic Society for Sports Medicine";
 
 
         public static void SeedData(this IServiceScopeFactory scopeFactory, ILogger logger)
@@ -28,20 +33,20 @@ namespace MedicalJournals.Entities.Extensions
             using (var serviceScope = scopeFactory.CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetService<JournalContext>();
-                var userManager = serviceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
-                var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<JournalRole>>();
+                _userManager = serviceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+                _roleManager = serviceScope.ServiceProvider.GetService<RoleManager<JournalRole>>();
 
                 _logger.LogDebug("Starting database table data seeding.");
 
                 _context = context;
 
-                if(_context==null)
-                    throw new ArgumentNullException("Database context is not set");
+                if(_context==null || _userManager==null)
+                    throw new ArgumentNullException("Database or identity objects are not set");
 
                 if (_context.AllMigrationsApplied())
                 {
+                    InitializeIdentity();
                     ApplyData(false);
-                    InitializeIdentity(userManager, roleManager);
                 }
                 else
                 {
@@ -64,20 +69,24 @@ namespace MedicalJournals.Entities.Extensions
 
         private static void ApplyData(bool isInMemoryDatabase)
         {
-            if(!isInMemoryDatabase)
+            _isInMemoryDatabase = isInMemoryDatabase;
+
+            if (!_isInMemoryDatabase)
                 _context.Database.OpenConnection();
 
-            AddCategories(isInMemoryDatabase);
+            AddCategories();
+            AddCountries();
+            AddPublishers();
+            AddJournals();
 
-            AddCountries(isInMemoryDatabase);
-            
+
         }
 
-        private static void AddCountries(bool isInMemoryDatabase)
+        private static void AddCountries()
         {
             if (!_context.Countries.Any())
             {
-                SwitchIdentity("Countries", true, isInMemoryDatabase);
+                SwitchIdentity("Countries", true, _isInMemoryDatabase);
 
                 _context.Countries.AddRange(
                     new Country {CountryId = 1, CountryName = "Algeria", CountryCode = "AL", IsEnabled = false},
@@ -92,13 +101,7 @@ namespace MedicalJournals.Entities.Extensions
                     new Country {CountryId = 10, CountryName = "Chad", CountryCode = "CD", IsEnabled = false},
                     new Country {CountryId = 11, CountryName = "Comoros", CountryCode = "CO", IsEnabled = false},
                     new Country {CountryId = 12, CountryName = "Côte d'Ivoire", CountryCode = "CI", IsEnabled = false},
-                    new Country
-                    {
-                        CountryId = 13,
-                        CountryName = "Democratic Republic of the Congo",
-                        CountryCode = "DC",
-                        IsEnabled = false
-                    },
+                    new Country {CountryId = 13, CountryName = "Democratic Republic of the Congo", CountryCode = "DC", IsEnabled = false},
                     new Country {CountryId = 14, CountryName = "Djibouti", CountryCode = "DJ", IsEnabled = false},
                     new Country {CountryId = 15, CountryName = "Egypt", CountryCode = "EG", IsEnabled = false},
                     new Country {CountryId = 16, CountryName = "Equatorial Guinea", CountryCode = "EQ", IsEnabled = false},
@@ -142,20 +145,22 @@ namespace MedicalJournals.Entities.Extensions
                     new Country {CountryId = 54, CountryName = "Western Sahara", CountryCode = "WS", IsEnabled = false},
                     new Country {CountryId = 55, CountryName = "Zambia", CountryCode = "ZA", IsEnabled = false},
                     new Country {CountryId = 56, CountryName = "Zimbabwe", CountryCode = "ZI", IsEnabled = false},
-                    new Country {CountryId = 57, CountryName = "Unknown", CountryCode = "UU", IsEnabled = true}
+                    new Country {CountryId = 57, CountryName = "Unknown", CountryCode = "UU", IsEnabled = true},
+                    new Country {CountryId = 58, CountryName = "United States", CountryCode = "US", IsEnabled = true },
+                    new Country {CountryId = 59, CountryName = "United Kingdom", CountryCode = "UK", IsEnabled = true }
                 );
 
                 _context.SaveChanges();
-                SwitchIdentity("Countries", false, isInMemoryDatabase);
+                SwitchIdentity("Countries", false, _isInMemoryDatabase);
                 _logger.LogDebug("Completed Countries table updates with {0} rows.", _context.Countries.Count());
             }
         }
 
-        private static void AddCategories(bool isInMemoryDatabase)
+        private static void AddCategories()
         {
             if (!_context.Categories.Any())
             {
-                SwitchIdentity("Categories", true, isInMemoryDatabase);
+                SwitchIdentity("Categories", true, _isInMemoryDatabase);
 
                 _context.Categories.AddRange(
                     new Category {CategoryId = 1, CategoryName = "Alternative and traditional"},
@@ -185,33 +190,79 @@ namespace MedicalJournals.Entities.Extensions
 
                 _context.SaveChanges();
                 _logger.LogDebug("Completed Categories table updates with {0} rows.", _context.Categories.Count());
-                SwitchIdentity("Categories", false, isInMemoryDatabase);
+                SwitchIdentity("Categories", false, _isInMemoryDatabase);
             }
         }
 
-        private static void AddPublishers(bool isInMemoryDatabase)
+        private static void AddPublishers()
         {
+            if (!_context.Publishers.Any())
+            {
+                var user = _userManager.FindByNameAsync(DefaultUserName).Result;
+                var country = _context.Countries.FirstOrDefault(x => x.CountryCode == "US");
+
+                if (user != null)
+                {
+
+                    _context.Publishers.AddRange(
+                        new Publisher
+                        {
+                            Name = DefaultPublisher,
+                            IsEnabled = true,
+                            User = user,       
+                            Country = country
+                        }
+                    );
+
+                    _context.SaveChanges();
+                    _logger.LogDebug("Completed Publishers table updates with {0} rows.", _context.Categories.Count());
+                }
+
+            }
         }
 
-        private static void AddJournals(bool isInMemoryDatabase)
+        private static void AddJournals()
         {
+            if (!_context.Journals.Any())
+            {
+                var publisher = _context.Publishers.FirstOrDefault(x=>x.Name== DefaultPublisher);
+
+                if (publisher != null)
+                {
+                    _context.Journals.AddRange(
+                        new Journal
+                        {
+                            Title = "The American Orthopaedic Society for Sports Medicine",
+                            IsEnabled = true,
+                            Publisher = publisher,
+                            Description = "American Journal of Sports Medicine is a peer-reviewed academic journal that publishes papers in the field of Sport Sciences. " +
+                                          "The journal's editor is Bruce Reider, MD. " +
+                                          "It has been in publication since 1972 and is currently published by " +
+                                          "SAGE Publications in association with American Orthopedic Society for Sports Medicine",
+                            CategoryId = 20
+                        }
+                    );
+
+                    _context.SaveChanges();
+                    _logger.LogDebug("Completed Journals table updates with {0} rows.", _context.Categories.Count());
+                }
+            }
         }
 
         //Create User=Admin@Admin.com with password=123456 in the Admin role        
-        public static void InitializeIdentity(UserManager<ApplicationUser> userManager, RoleManager<JournalRole> roleManager)
+        public static void InitializeIdentity()
         {
 
-            const string name = "ossent@yahoo.co.uk";
             const string password = "123456aZ.";
 
             //Create Role Admin if it does not exist
             var adminRoleName = Roles.Admin.ToDescription();
-            var adminRole = roleManager.FindByNameAsync(adminRoleName).Result;
+            var adminRole = _roleManager.FindByNameAsync(adminRoleName).Result;
             if (adminRole == null)
             {
                 adminRole = new JournalRole(adminRoleName);
 
-                var roleresult = roleManager.CreateAsync(adminRole).Result;
+                var roleresult = _roleManager.CreateAsync(adminRole).Result;
                 if (!roleresult.Succeeded)
                 {
                     _logger.LogError("Error when trying to add default user: {0}.", roleresult.Errors.FirstOrDefault());
@@ -222,12 +273,12 @@ namespace MedicalJournals.Entities.Extensions
             }
 
             var publisherRoleName = Roles.Publisher.ToDescription();
-            var publisherRole = roleManager.FindByNameAsync(publisherRoleName).Result;
+            var publisherRole = _roleManager.FindByNameAsync(publisherRoleName).Result;
             if (publisherRole == null)
             {
                 publisherRole = new JournalRole(publisherRoleName);
 
-                var roleresult = roleManager.CreateAsync(publisherRole).Result;
+                var roleresult = _roleManager.CreateAsync(publisherRole).Result;
                 if (!roleresult.Succeeded)
                 {
                     _logger.LogError("Error when trying to add default user: {0}.", roleresult.Errors.FirstOrDefault());
@@ -238,12 +289,12 @@ namespace MedicalJournals.Entities.Extensions
             }
 
             var publicRoleName = Roles.Public.ToDescription();
-            var publicRole = roleManager.FindByNameAsync(publicRoleName).Result;
+            var publicRole = _roleManager.FindByNameAsync(publicRoleName).Result;
             if (publicRole == null)
             {
                 publicRole = new JournalRole(publicRoleName);
 
-                var roleresult = roleManager.CreateAsync(publicRole).Result;
+                var roleresult = _roleManager.CreateAsync(publicRole).Result;
                 if (!roleresult.Succeeded)
                 {
                     _logger.LogError("Error when trying to add default user: {0}.", roleresult.Errors.FirstOrDefault());
@@ -254,20 +305,20 @@ namespace MedicalJournals.Entities.Extensions
             }
 
             // add the admin role to the default user
-            var user = userManager.FindByNameAsync(name).Result;
+            var user = _userManager.FindByNameAsync(DefaultUserName).Result;
             if (user == null)
             {
                 user = new ApplicationUser
                 {
-                    UserName = name,
-                    Email = name,
+                    UserName = DefaultUserName,
+                    Email = DefaultUserName,
                     FirstName = "Oscar",
                     LastName = "Ssentoogo",
                     Created = DateTime.UtcNow,
                     EmailConfirmed = true
                 };
             
-                var result = userManager.CreateAsync(user, password).Result;
+                var result = _userManager.CreateAsync(user, password).Result;
                 if (!result.Succeeded)
                 {
                     _logger.LogError("Error when trying to add default user: {0}.", result.Errors.FirstOrDefault());
@@ -278,14 +329,14 @@ namespace MedicalJournals.Entities.Extensions
             else
             {
                 ////    Logger<>.LogFormat(LogType.Debug, "Default user already exists");
-                user = userManager.FindByNameAsync(name).Result;
+                user = _userManager.FindByNameAsync(DefaultUserName).Result;
             }
 
 
             // Add user to Role Admin if not already added                
-            if (!userManager.IsInRoleAsync(user, adminRoleName).Result)
+            if (!_userManager.IsInRoleAsync(user, adminRoleName).Result)
             {
-                var result = userManager.AddToRoleAsync(user, adminRoleName).Result;
+                var result = _userManager.AddToRoleAsync(user, adminRoleName).Result;
                 if (!result.Succeeded)
                 {
                     _logger.LogError("Error when trying to add default user to admin role: {0}.", result.Errors.FirstOrDefault());
@@ -293,9 +344,9 @@ namespace MedicalJournals.Entities.Extensions
             }
 
             // Add user to Role publisher if not already added                
-            if (!userManager.IsInRoleAsync(user, publisherRoleName).Result)
+            if (!_userManager.IsInRoleAsync(user, publisherRoleName).Result)
             {
-                var result = userManager.AddToRoleAsync(user, publisherRoleName).Result;
+                var result = _userManager.AddToRoleAsync(user, publisherRoleName).Result;
                 if (!result.Succeeded)
                 {
                     _logger.LogError("Error when trying to add default user to publisher role: {0}.", result.Errors.FirstOrDefault());

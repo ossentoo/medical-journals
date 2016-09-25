@@ -121,9 +121,10 @@ namespace MedicalJournals.Web.Areas.Admin.Controllers
         // GET: /StoreManager/Edit/5
         public async Task<IActionResult> Edit(Guid id)
         {
-            var journal = await DbContext.Journals.
-                Where(a => a.JournalId== id).
-                FirstOrDefaultAsync();
+            var journal = await DbContext.Journals
+                .Where(a => a.JournalId== id)
+                .Include(p => p.Publisher)
+                .FirstOrDefaultAsync();
 
             if (journal == null)
             {
