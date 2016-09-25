@@ -1,4 +1,8 @@
-﻿@model ExternalLoginListViewModel
+﻿@using System.Threading.Tasks
+@using MedicalJournals.Models.Identity
+@using MedicalJournals.Models.ViewModels
+@using Microsoft.AspNetCore.Identity
+@model ExternalLoginListViewModel
 @inject SignInManager<ApplicationUser> SignInManager
 <h4>Use another service to log in.</h4>
 <hr />

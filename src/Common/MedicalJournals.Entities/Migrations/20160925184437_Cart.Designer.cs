@@ -8,7 +8,7 @@ using MedicalJournals.Entities;
 namespace MedicalJournals.Entities.Migrations
 {
     [DbContext(typeof(JournalContext))]
-    [Migration("20160925053532_Cart")]
+    [Migration("20160925184437_Cart")]
     partial class Cart
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -193,51 +193,6 @@ namespace MedicalJournals.Entities.Migrations
                     b.ToTable("JournalTags");
                 });
 
-            modelBuilder.Entity("MedicalJournals.Models.Data.Order", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("CountryId")
-                        .IsRequired();
-
-                    b.Property<DateTime>("OrderDate");
-
-                    b.Property<decimal>("Total");
-
-                    b.Property<Guid?>("UserId");
-
-                    b.HasKey("OrderId");
-
-                    b.HasIndex("CountryId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Order");
-                });
-
-            modelBuilder.Entity("MedicalJournals.Models.Data.OrderDetail", b =>
-                {
-                    b.Property<int>("OrderDetailId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<Guid>("JournalId");
-
-                    b.Property<int>("OrderId");
-
-                    b.Property<int>("Quantity");
-
-                    b.Property<decimal>("UnitPrice");
-
-                    b.HasKey("OrderDetailId");
-
-                    b.HasIndex("JournalId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderDetails");
-                });
-
             modelBuilder.Entity("MedicalJournals.Models.Data.Publisher", b =>
                 {
                     b.Property<Guid>("PublisherId")
@@ -272,12 +227,14 @@ namespace MedicalJournals.Entities.Migrations
 
                     b.Property<DateTime>("Created");
 
-                    b.Property<bool>("IsEnabled");
+                    b.Property<bool>("HasExpired");
 
                     b.Property<Guid?>("JournalId")
                         .IsRequired();
 
                     b.Property<DateTime>("LastModified");
+
+                    b.Property<decimal>("Total");
 
                     b.Property<Guid?>("UserId")
                         .IsRequired();
@@ -289,6 +246,24 @@ namespace MedicalJournals.Entities.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Subscriptions");
+                });
+
+            modelBuilder.Entity("MedicalJournals.Models.Data.SubscriptionDetail", b =>
+                {
+                    b.Property<int>("SubscriptionDetailId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("JournalId");
+
+                    b.Property<Guid>("SubscriptionId");
+
+                    b.HasKey("SubscriptionDetailId");
+
+                    b.HasIndex("JournalId");
+
+                    b.HasIndex("SubscriptionId");
+
+                    b.ToTable("SubscriptionDetails");
                 });
 
             modelBuilder.Entity("MedicalJournals.Models.Data.Tag", b =>
@@ -476,31 +451,6 @@ namespace MedicalJournals.Entities.Migrations
                         .HasForeignKey("TagId");
                 });
 
-            modelBuilder.Entity("MedicalJournals.Models.Data.Order", b =>
-                {
-                    b.HasOne("MedicalJournals.Models.Data.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("MedicalJournals.Models.Identity.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("MedicalJournals.Models.Data.OrderDetail", b =>
-                {
-                    b.HasOne("MedicalJournals.Models.Data.Journal", "Journal")
-                        .WithMany()
-                        .HasForeignKey("JournalId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("MedicalJournals.Models.Data.Order", "Order")
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("MedicalJournals.Models.Data.Publisher", b =>
                 {
                     b.HasOne("MedicalJournals.Models.Data.Country", "Country")
@@ -524,6 +474,19 @@ namespace MedicalJournals.Entities.Migrations
                     b.HasOne("MedicalJournals.Models.Identity.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MedicalJournals.Models.Data.SubscriptionDetail", b =>
+                {
+                    b.HasOne("MedicalJournals.Models.Data.Journal", "Journal")
+                        .WithMany()
+                        .HasForeignKey("JournalId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MedicalJournals.Models.Data.Subscription", "Subscription")
+                        .WithMany("SubscriptionDetails")
+                        .HasForeignKey("SubscriptionId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

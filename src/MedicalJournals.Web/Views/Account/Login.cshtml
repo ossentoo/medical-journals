@@ -1,4 +1,6 @@
-﻿@model LoginViewModel
+﻿@using System.Threading.Tasks
+@using MedicalJournals.Models.ViewModels
+@model LoginViewModel
 
 @{
     ViewBag.Title = "Log in";
@@ -49,9 +51,7 @@
         </section>
     </div>
     <div class="col-md-4">
-        <section id="socialLoginForm">
-            @await Html.PartialAsync("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-        </section>
+
     </div>
 </div>
 

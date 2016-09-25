@@ -9,6 +9,10 @@ namespace MedicalJournals.Entities.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "IsEnabled",
+                table: "Subscriptions");
+
             migrationBuilder.CreateTable(
                 name: "CartItems",
                 columns: table => new
@@ -32,60 +36,42 @@ namespace MedicalJournals.Entities.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Order",
+                name: "SubscriptionDetails",
                 columns: table => new
                 {
-                    OrderId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CountryId = table.Column<int>(nullable: false),
-                    OrderDate = table.Column<DateTime>(nullable: false),
-                    Total = table.Column<decimal>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Order", x => x.OrderId);
-                    table.ForeignKey(
-                        name: "FK_Order_Countries_CountryId",
-                        column: x => x.CountryId,
-                        principalTable: "Countries",
-                        principalColumn: "CountryId",
-                        onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
-                        name: "FK_Order_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OrderDetails",
-                columns: table => new
-                {
-                    OrderDetailId = table.Column<int>(nullable: false)
+                    SubscriptionDetailId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     JournalId = table.Column<Guid>(nullable: false),
-                    OrderId = table.Column<int>(nullable: false),
-                    Quantity = table.Column<int>(nullable: false),
-                    UnitPrice = table.Column<decimal>(nullable: false)
+                    SubscriptionId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderDetails", x => x.OrderDetailId);
+                    table.PrimaryKey("PK_SubscriptionDetails", x => x.SubscriptionDetailId);
                     table.ForeignKey(
-                        name: "FK_OrderDetails_Journals_JournalId",
+                        name: "FK_SubscriptionDetails_Journals_JournalId",
                         column: x => x.JournalId,
                         principalTable: "Journals",
                         principalColumn: "JournalId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderDetails_Order_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Order",
-                        principalColumn: "OrderId",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_SubscriptionDetails_Subscriptions_SubscriptionId",
+                        column: x => x.SubscriptionId,
+                        principalTable: "Subscriptions",
+                        principalColumn: "SubscriptionId",
+                        onDelete: ReferentialAction.NoAction);
                 });
+
+            migrationBuilder.AddColumn<bool>(
+                name: "HasExpired",
+                table: "Subscriptions",
+                nullable: false,
+                defaultValue: false);
+
+            migrationBuilder.AddColumn<decimal>(
+                name: "Total",
+                table: "Subscriptions",
+                nullable: false,
+                defaultValue: 0m);
 
             migrationBuilder.AddColumn<decimal>(
                 name: "Price",
@@ -99,28 +85,26 @@ namespace MedicalJournals.Entities.Migrations
                 column: "JournalId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Order_CountryId",
-                table: "Order",
-                column: "CountryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Order_UserId",
-                table: "Order",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderDetails_JournalId",
-                table: "OrderDetails",
+                name: "IX_SubscriptionDetails_JournalId",
+                table: "SubscriptionDetails",
                 column: "JournalId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderDetails_OrderId",
-                table: "OrderDetails",
-                column: "OrderId");
+                name: "IX_SubscriptionDetails_SubscriptionId",
+                table: "SubscriptionDetails",
+                column: "SubscriptionId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "HasExpired",
+                table: "Subscriptions");
+
+            migrationBuilder.DropColumn(
+                name: "Total",
+                table: "Subscriptions");
+
             migrationBuilder.DropColumn(
                 name: "Price",
                 table: "Journals");
@@ -129,10 +113,13 @@ namespace MedicalJournals.Entities.Migrations
                 name: "CartItems");
 
             migrationBuilder.DropTable(
-                name: "OrderDetails");
+                name: "SubscriptionDetails");
 
-            migrationBuilder.DropTable(
-                name: "Order");
+            migrationBuilder.AddColumn<bool>(
+                name: "IsEnabled",
+                table: "Subscriptions",
+                nullable: false,
+                defaultValue: false);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace MedicalJournals.Entities
         public DbSet<Country> Countries { get; set; }
         public DbSet<Journal> Journals { get; set; }
         public DbSet<JournalTag> JournalTags { get; set; }
-        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<SubscriptionDetail> SubscriptionDetails { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
 

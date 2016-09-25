@@ -11,12 +11,12 @@ namespace MedicalJournals.Entities.Data
     public class Cart
     {
         private readonly JournalContext _context;
-        private readonly string _shoppingCartId;
+        private readonly string _cartId;
 
         private Cart(JournalContext dbContext, string id)
         {
             _context = dbContext;
-            _shoppingCartId = id;
+            _cartId = id;
         }
 
         public static Cart GetCart(JournalContext db, HttpContext context) 
@@ -27,9 +27,9 @@ namespace MedicalJournals.Entities.Data
 
         public async Task AddToCart(Journal journal)
         {
-            // Get the matching cart and album instances
+            // Get the matching cart and journals instances
             var cartItem = await _context.CartItems.SingleOrDefaultAsync(
-                c => c.CartId == _shoppingCartId
+                c => c.CartId == _cartId
                 && c.JournalId == journal.JournalId);
 
             if (cartItem == null)
@@ -38,7 +38,7 @@ namespace MedicalJournals.Entities.Data
                 cartItem = new CartItem
                 {
                     JournalId = journal.JournalId,
-                    CartId = _shoppingCartId,
+                    CartId = _cartId,
                     Count = 1
                 };
 
@@ -55,7 +55,7 @@ namespace MedicalJournals.Entities.Data
         {
             // Get the cart
             var cartItem = _context.CartItems.SingleOrDefault(
-                cart => cart.CartId == _shoppingCartId
+                cart => cart.CartId == _cartId
                 && cart.CartItemId == id);
 
             int itemCount = 0;
@@ -80,7 +80,7 @@ namespace MedicalJournals.Entities.Data
         {
             var cartItems = await _context
                 .CartItems
-                .Where(cart => cart.CartId == _shoppingCartId)
+                .Where(cart => cart.CartId == _cartId)
                 .ToArrayAsync();
 
             _context.CartItems.RemoveRange(cartItems);
@@ -90,16 +90,16 @@ namespace MedicalJournals.Entities.Data
         {
             return _context
                 .CartItems
-                .Where(cart => cart.CartId == _shoppingCartId)
+                .Where(cart => cart.CartId == _cartId)
                 .Include(c => c.Journal)
                 .ToListAsync();
         }
         
-        public Task<List<string>> GetCartAlbumTitles()
+        public Task<List<string>> GetCartJournals()
         {
             return _context
-                .CartItems
-                .Where(cart => cart.CartId == _shoppingCartId)
+                .CartItems?
+                .Where(cart => cart.CartId == _cartId)
                 .Select(c => c.Journal.Title)
                 .OrderBy(n => n)
                 .ToListAsync();
@@ -110,26 +110,26 @@ namespace MedicalJournals.Entities.Data
             // Get the count of each item in the cart and sum them up
             return _context
                 .CartItems
-                .Where(c => c.CartId == _shoppingCartId)
+                .Where(c => c.CartId == _cartId)
                 .Select(c => c.Count)
                 .SumAsync();
         }
 
         public Task<decimal> GetTotal()
         {
-            // Multiply album price by count of that album to get 
-            // the current price for each of those albums in the cart
-            // sum all album price totals to get the cart total
+            // Multiply journal price by count of that journal to get 
+            // the current price for each of those journals in the cart
+            // sum all journal price totals to get the cart total
 
             return _context
                 .CartItems
                 .Include(c => c.Journal)
-                .Where(c => c.CartId == _shoppingCartId)
+                .Where(c => c.CartId == _cartId)
                 .Select(c => c.Journal.Price * c.Count)
                 .SumAsync();
         }
 
-        public async Task<int> CreateOrder(Order order)
+        public async Task<Guid> CreateSubscription(Subscription subscription)
         {
             decimal orderTotal = 0;
 
@@ -140,28 +140,26 @@ namespace MedicalJournals.Entities.Data
             {
                 var journal = await _context.Journals.SingleAsync(a => a.JournalId == item.JournalId);
 
-                var orderDetail = new OrderDetail
+                var subscriptionDetail = new SubscriptionDetail
                 {
                     JournalId = item.JournalId,
-                    OrderId = order.OrderId,
-                    UnitPrice = journal.Price,
-                    Quantity = item.Count,
+                    SubscriptionId = subscription.SubscriptionId
                 };
 
                 // Set the order total of the shopping cart
                 orderTotal += (item.Count * journal.Price);
 
-                _context.OrderDetails.Add(orderDetail);
+                _context.SubscriptionDetails.Add(subscriptionDetail);
             }
 
             // Set the order's total to the orderTotal count
-            order.Total = orderTotal;
+            subscription.Total = orderTotal;
 
             // Empty the shopping cart
             await EmptyCart();
 
             // Return the OrderId as the confirmation number
-            return order.OrderId;
+            return subscription.SubscriptionId;
         }
 
         // We're using HttpContextBase to allow access to sessions.

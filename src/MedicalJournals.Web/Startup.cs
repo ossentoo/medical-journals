@@ -6,13 +6,13 @@ using MedicalJournals.Models.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MedicalJournals.Entities.Extensions;
 using MedicalJournals.Web.Properties;
+using Microsoft.EntityFrameworkCore;
 
 namespace MedicalJournals.Web
 {
@@ -40,7 +40,7 @@ namespace MedicalJournals.Web
             // Add framework services.
             services.AddEntityFramework()
                 .AddEntityFrameworkSqlServer()
-                // .AddDbContext<JournalContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]))
+                // .Addcontext<JournalContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]))
                 .AddDbContext<JournalContext>(o=>o.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"], b =>
                 {
                     var assemblyName = typeof(JournalContext).GetAssembly().GetName().Name;
@@ -49,11 +49,11 @@ namespace MedicalJournals.Web
                 }));
 
             services.AddIdentity<ApplicationUser, JournalRole>(o => {
-                    o.Password.RequiredLength = 8;
-                    o.Password.RequireDigit = true;
-                    o.Password.RequireLowercase = true;
-                    o.Password.RequireUppercase = true;
-                    o.Password.RequireNonAlphanumeric = true;
+                    o.Password.RequiredLength = 6;
+                    o.Password.RequireDigit = false;
+                    o.Password.RequireLowercase = false;
+                    o.Password.RequireUppercase = false;
+                    o.Password.RequireNonAlphanumeric = false;
                 })
                 .AddEntityFrameworkStores<JournalContext, Guid>()
                 .AddDefaultTokenProviders()

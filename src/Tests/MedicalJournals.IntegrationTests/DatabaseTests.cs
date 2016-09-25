@@ -35,7 +35,7 @@ namespace MedicalJournals.IntegrationTests
             return builder.Options;
         }
 
-        [TestMethod]
+        [TestMethod, TestProperty("Name", "Migrations_CheckSeededDataWorkingForCategoriesTable")]
         public void Migrations_CheckSeededDataWorkingForCategoriesTable()
         {
             // All contexts that share the same service provider will share the same InMemory database

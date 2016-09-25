@@ -10,18 +10,18 @@ namespace MedicalJournals.Web.Components
     [ViewComponent(Name = "CartSummary")]
     public class CartSummaryComponent : ViewComponent
     {
-        public CartSummaryComponent(JournalContext context)
-        {
-            DbContext = context;
-        }
+        private readonly JournalContext _context;
 
-        private JournalContext DbContext { get; }
+        public CartSummaryComponent([FromServices]JournalContext context)
+        {
+            _context = context;
+        }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var cart = Cart.GetCart(DbContext, HttpContext);
+            var cart = Cart.GetCart(_context, HttpContext);
             
-            var cartItems = await cart.GetCartAlbumTitles();
+            var cartItems = await cart.GetCartJournals();
 
             ViewBag.CartCount = cartItems.Count;
             ViewBag.CartSummary = string.Join("\n", cartItems.Distinct());

@@ -9,16 +9,16 @@ namespace MedicalJournals.Web.Components
     [ViewComponent(Name = "CategoryMenu")]
     public class CategoryMenuComponent : ViewComponent
     {
-        public CategoryMenuComponent(JournalContext context)
-        {
-            DbContext = context;
-        }
+        private readonly JournalContext _context;
 
-        private JournalContext DbContext { get; }
+        public CategoryMenuComponent([FromServices] JournalContext context)
+        {
+            _context = context;
+        }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {            
-            var categories = await DbContext.Categories.Select(g => g.CategoryName).Take(9).ToListAsync();
+            var categories = await _context.Categories.Select(g => g.CategoryName).Take(9).ToListAsync();
 
             return View(categories);
         }
