@@ -1,4 +1,5 @@
 ﻿using System;
+using AutoMapper;
 using MedicalJournals.Entities;
 using MedicalJournals.Helpers;
 using MedicalJournals.Identity;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MedicalJournals.Entities.Extensions;
+using MedicalJournals.Models.Mapping;
 using MedicalJournals.Web.Properties;
 using Microsoft.EntityFrameworkCore;
 
@@ -84,6 +86,15 @@ namespace MedicalJournals.Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            Mapper.Initialize(config =>
+            {
+                var mapperConfig = new AutoMapperConfig();
+                mapperConfig.Execute(config);
+            });
+
+            Mapper.AssertConfigurationIsValid();
+
 
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();

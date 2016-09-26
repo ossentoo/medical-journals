@@ -12,6 +12,8 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using AutoMapper;
+using MedicalJournals.Web.ViewModels;
 
 namespace MedicalJournals.Web.Areas.Admin.Controllers
 {
@@ -124,6 +126,7 @@ namespace MedicalJournals.Web.Areas.Admin.Controllers
             var journal = await DbContext.Journals
                 .Where(a => a.JournalId== id)
                 .Include(p => p.Publisher)
+                .Include(p => p.Category)
                 .FirstOrDefaultAsync();
 
             if (journal == null)
@@ -133,7 +136,7 @@ namespace MedicalJournals.Web.Areas.Admin.Controllers
 
             ViewBag.CategoryId = new SelectList(DbContext.Categories, "CategoryId", "Name", journal.CategoryId);
             ViewBag.PublisherId = new SelectList(DbContext.Publishers, "PublisherId", "Name", journal.Publisher.PublisherId);
-            return View(journal);
+            return View(Mapper.Map<JournalViewModel>(journal));
         }
 
         //
@@ -156,7 +159,7 @@ namespace MedicalJournals.Web.Areas.Admin.Controllers
 
             ViewBag.CategoryId = new SelectList(DbContext.Categories, "CategoryId", "Name", journal.CategoryId);
             ViewBag.PublisherId = new SelectList(DbContext.Publishers, "PublisherId", "Name", journal.Publisher.PublisherId);
-            return View(journal);
+            return View(Mapper.Map<JournalViewModel>(journal));
         }
 
         //
