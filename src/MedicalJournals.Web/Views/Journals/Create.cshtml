@@ -13,7 +13,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Album</h4>
+        <h4>Journal</h4>
         <hr/>
         @Html.ValidationSummary(true)
 
@@ -48,7 +48,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.File, new {@class = "control-label col-md-2"})
+            File (in PDF format)
             <div class="col-md-10">
                 @Html.TextBoxFor(model => model.File, new {type = "file"})
             </div>

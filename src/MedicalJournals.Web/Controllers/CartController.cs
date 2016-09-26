@@ -13,21 +13,20 @@ namespace MedicalJournals.Web.Controllers
 {
     public class CartController : Controller
     {
+        private readonly JournalContext _context;
         private readonly ILogger<CartController> _logger;
 
-        public CartController(JournalContext context, ILogger<CartController> logger)
+        public CartController([FromServices]JournalContext context, ILogger<CartController> logger)
         {
-            context = context;
+            _context = context;
             _logger = logger;
         }
-
-        public JournalContext context { get; }
 
         //
         // GET: /ShoppingCart/
         public async Task<IActionResult> Index()
         {
-            var cart = Cart.GetCart(context, HttpContext);
+            var cart = Cart.GetCart(_context, HttpContext);
 
             // Set up our ViewModel
             var viewModel = new CartViewModel
@@ -46,15 +45,15 @@ namespace MedicalJournals.Web.Controllers
         public async Task<IActionResult> AddToCart(Guid id, CancellationToken requestAborted)
         {
             // Retrieve the joiurnal from the database
-            var journal = await context.Journals
+            var journal = await _context.Journals
                 .SingleAsync(x => x.JournalId == id, cancellationToken: requestAborted);
 
             // Add it to the shopping cart
-            var cart = Cart.GetCart(context, HttpContext);
+            var cart = Cart.GetCart(_context, HttpContext);
 
             await cart.AddToCart(journal);
 
-            await context.SaveChangesAsync(requestAborted);
+            await _context.SaveChangesAsync(requestAborted);
             _logger.LogInformation("Journal {journalId} was added to the cart.", journal.JournalId);
 
             // Go back to the main store page for more shopping
@@ -70,10 +69,10 @@ namespace MedicalJournals.Web.Controllers
             CancellationToken requestAborted)
         {
             // Retrieve the current user's shopping cart
-            var cart = Cart.GetCart(context, HttpContext);
+            var cart = Cart.GetCart(_context, HttpContext);
 
             // Get the name of the journal to display confirmation
-            var cartItem = await context.CartItems
+            var cartItem = await _context.CartItems
                 .Where(item => item.CartItemId == id)
                 .Include(c => c.Journal)
                 .SingleOrDefaultAsync();
@@ -85,7 +84,7 @@ namespace MedicalJournals.Web.Controllers
                 // Remove from cart
                 itemCount = cart.RemoveFromCart(id);
 
-                await context.SaveChangesAsync(requestAborted);
+                await _context.SaveChangesAsync(requestAborted);
 
                 string removed = (itemCount > 0) ? " 1 copy of " : string.Empty;
                 message = removed + cartItem.Journal.Title + " has been removed from your cart.";

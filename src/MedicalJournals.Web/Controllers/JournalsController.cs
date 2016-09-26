@@ -7,14 +7,16 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Threading;
 using AutoMapper;
 using MedicalJournals.Models.Data;
 using MedicalJournals.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Net.Http.Headers;
 
 namespace MedicalJournals.Web.Controllers
 {
+    [Authorize]
     public class JournalsController : Controller
     {
         private readonly JournalContext _context;
@@ -27,6 +29,7 @@ namespace MedicalJournals.Web.Controllers
         }
         //
         // GET: /Index/
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var categories = await _context.Categories.ToListAsync();
@@ -48,6 +51,7 @@ namespace MedicalJournals.Web.Controllers
 
         //
         // GET: /Journals/Browse?category=
+        [AllowAnonymous]
         public async Task<IActionResult> Browse(string category)
         {
             // Retrieve category and its associated journals from database
@@ -99,26 +103,33 @@ namespace MedicalJournals.Web.Controllers
             return View(journal);
         }
 
+
         //
         // GET: /JournalsManager/Create
         public IActionResult Create()
         {
-            var journal = new JournalViewModel();
+            var journalViewModel = new JournalViewModel();
 
-            ViewBag.CategoryId = new SelectList(_context.Categories, "CategoryId", "Name", journal.CategoryId);
-            ViewBag.PublisherId = new SelectList(_context.Publishers, "PublisherId", "Name", journal.PublisherId);
+            ViewBag.CategoryId = new SelectList(_context.Categories, "CategoryId", "Name", journalViewModel.CategoryId);
+            ViewBag.PublisherId = new SelectList(_context.Publishers, "PublisherId", "Name", journalViewModel.PublisherId);
 
+            ConfigureJournal(journalViewModel);
+            return View(journalViewModel);
+        }
+
+        private void ConfigureJournal(JournalViewModel journal)
+        {
             journal.Categories = _context.Categories.Select(x => new SelectListItem
-                                    {
-                                        Text = x.CategoryName.ToString(),
-                                        Value = x.CategoryId.ToString()
-                                    }).ToList();
+            {
+                Text = x.CategoryName.ToString(),
+                Value = x.CategoryId.ToString()
+            }).ToList();
 
             if (!string.IsNullOrEmpty(User?.Identity?.Name))
             {
                 var publisher = _context.Publishers
-                                        .Include(u=>u.User)
-                                        .FirstOrDefault(x => x.User.UserName == User.Identity.Name);
+                    .Include(u => u.User)
+                    .FirstOrDefault(x => x.User.UserName == User.Identity.Name);
 
                 journal.Publisher = publisher.Name;
                 journal.PublisherId = publisher.PublisherId;
@@ -127,7 +138,6 @@ namespace MedicalJournals.Web.Controllers
 
             // default price for now
             journal.Price = 1;
-            return View(journal);
         }
 
         // POST: /JournalsManager/Create
@@ -137,18 +147,30 @@ namespace MedicalJournals.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var journal = Mapper.Map<Journal>(journalView);
+                var fileName = ContentDispositionHeaderValue
+                .Parse(journalView.File.ContentDisposition)
+                .FileName
+                .Trim('"');// FileName returns "fileName.ext"(with double quotes)
 
-                var publisher = _context.Publishers.FirstOrDefault(x => x.PublisherId == journalView.PublisherId);
-                journal.Publisher = publisher;
-                _context.Journals.Add(journal);
-                _context.SaveChanges();
+                if (fileName.EndsWith(".pdf"))// Important for security if saving in webroot                    
+                {
 
-                return RedirectToAction("Manage");
+                    var journal = Mapper.Map<Journal>(journalView);
+
+                    var publisher = _context.Publishers.FirstOrDefault(x => x.PublisherId == journalView.PublisherId);
+                    journal.Publisher = publisher;
+                    _context.Journals.Add(journal);
+                    _context.SaveChanges();
+
+                    return RedirectToAction("Manage");
+                }
             }
 
             ViewBag.CategoryId = new SelectList(_context.Categories, "CategoryId", "Name", journalView.CategoryId);
             ViewBag.PublisherId = new SelectList(_context.Publishers, "PublisherId", "Name", journalView.PublisherId);
+            ModelState.AddModelError(string.Empty, "Invalid file format.  Please use PDF format");
+
+            ConfigureJournal(journalView);
             return View(journalView);
         }
     }
