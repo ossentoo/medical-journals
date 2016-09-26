@@ -1,0 +1,68 @@
+﻿@using System.Threading.Tasks
+@using MedicalJournals.Models.Data
+@model IEnumerable<Journal>
+
+@{
+    ViewBag.Title = "Manage Your Journals";
+}
+
+<h2>Manage Your Journals</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Category.CategoryName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Publisher.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Price)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CategoryName)
+            </td>
+            <td>
+                @if (item.Publisher.Name.Length <= 25)
+                {
+                    @item.Publisher.Name
+                }
+                else
+                {
+                    @item.Publisher.Name.Substring(0, 25)<text>...</text>
+                }
+            </td>
+            <td>
+                @if (item.Title.Length <= 25)
+                {
+                    @item.Title
+                }
+                else
+                {
+                    @item.Title.Substring(0, 25)<text>...</text>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.JournalId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.JournalId }) |
+                @Html.ActionLink("Delete", "RemoveJournal", new { id = item.JournalId })
+            </td>
+        </tr>
+    }
+
+</table>

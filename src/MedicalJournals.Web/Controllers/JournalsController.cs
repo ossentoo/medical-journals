@@ -7,7 +7,11 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading;
+using AutoMapper;
 using MedicalJournals.Models.Data;
+using MedicalJournals.Web.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MedicalJournals.Web.Controllers
 {
@@ -22,12 +26,24 @@ namespace MedicalJournals.Web.Controllers
             _appSettings = options.Value;
         }
         //
-        // GET: /Store/
+        // GET: /Index/
         public async Task<IActionResult> Index()
         {
             var categories = await _context.Categories.ToListAsync();
 
             return View(categories);
+        }
+
+        //
+        // GET: /JournalsManager/
+        public async Task<IActionResult> Manage()
+        {
+            var journals = await _context.Journals
+                .Include(a => a.Category)
+                .Include(a => a.Publisher)
+                .ToListAsync();
+
+            return View(journals);
         }
 
         //
@@ -81,6 +97,59 @@ namespace MedicalJournals.Web.Controllers
             }
 
             return View(journal);
+        }
+
+        //
+        // GET: /JournalsManager/Create
+        public IActionResult Create()
+        {
+            var journal = new JournalViewModel();
+
+            ViewBag.CategoryId = new SelectList(_context.Categories, "CategoryId", "Name", journal.CategoryId);
+            ViewBag.PublisherId = new SelectList(_context.Publishers, "PublisherId", "Name", journal.PublisherId);
+
+            journal.Categories = _context.Categories.Select(x => new SelectListItem
+                                    {
+                                        Text = x.CategoryName.ToString(),
+                                        Value = x.CategoryId.ToString()
+                                    }).ToList();
+
+            if (!string.IsNullOrEmpty(User?.Identity?.Name))
+            {
+                var publisher = _context.Publishers
+                                        .Include(u=>u.User)
+                                        .FirstOrDefault(x => x.User.UserName == User.Identity.Name);
+
+                journal.Publisher = publisher.Name;
+                journal.PublisherId = publisher.PublisherId;
+                journal.UserId = publisher.User.Id;
+            }
+
+            // default price for now
+            journal.Price = 1;
+            return View(journal);
+        }
+
+        // POST: /JournalsManager/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(JournalViewModel journalView)
+        {
+            if (ModelState.IsValid)
+            {
+                var journal = Mapper.Map<Journal>(journalView);
+
+                var publisher = _context.Publishers.FirstOrDefault(x => x.PublisherId == journalView.PublisherId);
+                journal.Publisher = publisher;
+                _context.Journals.Add(journal);
+                _context.SaveChanges();
+
+                return RedirectToAction("Manage");
+            }
+
+            ViewBag.CategoryId = new SelectList(_context.Categories, "CategoryId", "Name", journalView.CategoryId);
+            ViewBag.PublisherId = new SelectList(_context.Publishers, "PublisherId", "Name", journalView.PublisherId);
+            return View(journalView);
         }
     }
 }

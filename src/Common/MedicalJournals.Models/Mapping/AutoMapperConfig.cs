@@ -12,7 +12,7 @@ namespace MedicalJournals.Models.Mapping
     {
         public void Execute(IMapperConfigurationExpression config)
         {
-            var assemblies = GetType().GetAssembly().GetAppReferencedAssemblies();
+            var assemblies = Assembly.GetEntryAssembly().GetAppReferencedAssemblies();
             var types = new List<TypeInfo>();
 
             var assembliestList = assemblies.Where(x => x.FullName.Contains("MedicalJournals"));

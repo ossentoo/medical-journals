@@ -22,20 +22,20 @@ namespace MedicalJournals.Web.Areas.Admin.Controllers
     public class JournalsManagerController : Controller
     {
         private readonly AppSettings _appSettings;
+        private readonly JournalContext _context;
 
         public JournalsManagerController([FromServices]JournalContext context, IOptions<AppSettings> options)
         {
-            DbContext = context;
+            _context = context;
             _appSettings = options.Value;
         }
 
-        public JournalContext DbContext { get; }
 
         //
-        // GET: /StoreManager/
+        // GET: /JournalsManager/
         public async Task<IActionResult> Index()
         {
-            var journals = await DbContext.Journals
+            var journals = await _context.Journals
                 .Include(a => a.Category)
                 .Include(a => a.Publisher)
                 .ToListAsync();
@@ -44,7 +44,7 @@ namespace MedicalJournals.Web.Areas.Admin.Controllers
         }
 
         //
-        // GET: /StoreManager/Details/5
+        // GET: /JournalsManager/Details/5
         public async Task<IActionResult> Details(
             [FromServices] IMemoryCache cache,
             Guid id)
@@ -54,7 +54,7 @@ namespace MedicalJournals.Web.Areas.Admin.Controllers
             Journal journal;
             if (!cache.TryGetValue(cacheKey, out journal))
             {
-                journal = await DbContext.Journals
+                journal = await _context.Journals
                         .Where(a => a.JournalId == id)
                         .Include(a => a.Publisher)
                         .Include(a => a.Category)
@@ -83,15 +83,15 @@ namespace MedicalJournals.Web.Areas.Admin.Controllers
         }
 
         //
-        // GET: /StoreManager/Create
+        // GET: /JournalsManager/Create
         public IActionResult Create()
         {
-            ViewBag.CategoryId = new SelectList(DbContext.Categories, "CategoryId", "Name");
-            ViewBag.PublisherId = new SelectList(DbContext.Publishers, "PublisherId", "Name");
+            ViewBag.CategoryId = new SelectList(_context.Categories, "CategoryId", "Name");
+            ViewBag.PublisherId = new SelectList(_context.Publishers, "PublisherId", "Name");
             return View();
         }
 
-        // POST: /StoreManager/Create
+        // POST: /JournalsManager/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
@@ -101,8 +101,8 @@ namespace MedicalJournals.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                DbContext.Journals.Add(journal);
-                await DbContext.SaveChangesAsync(requestAborted);
+                _context.Journals.Add(journal);
+                await _context.SaveChangesAsync(requestAborted);
 
                 var journalData = new Journal
                 {
@@ -114,16 +114,16 @@ namespace MedicalJournals.Web.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CategoryId = new SelectList(DbContext.Categories, "CategoryId", "Name", journal.CategoryId);
-            ViewBag.PublisherId = new SelectList(DbContext.Publishers, "PublisherId", "Name", journal.Publisher.PublisherId);
+            ViewBag.CategoryId = new SelectList(_context.Categories, "CategoryId", "Name", journal.CategoryId);
+            ViewBag.PublisherId = new SelectList(_context.Publishers, "PublisherId", "Name", journal.Publisher.PublisherId);
             return View(journal);
         }
 
         //
-        // GET: /StoreManager/Edit/5
+        // GET: /JournalsManager/Edit/5
         public async Task<IActionResult> Edit(Guid id)
         {
-            var journal = await DbContext.Journals
+            var journal = await _context.Journals
                 .Where(a => a.JournalId== id)
                 .Include(p => p.Publisher)
                 .Include(p => p.Category)
@@ -134,13 +134,13 @@ namespace MedicalJournals.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            ViewBag.CategoryId = new SelectList(DbContext.Categories, "CategoryId", "Name", journal.CategoryId);
-            ViewBag.PublisherId = new SelectList(DbContext.Publishers, "PublisherId", "Name", journal.Publisher.PublisherId);
+            ViewBag.CategoryId = new SelectList(_context.Categories, "CategoryId", "Name", journal.CategoryId);
+            ViewBag.PublisherId = new SelectList(_context.Publishers, "PublisherId", "Name", journal.Publisher.PublisherId);
             return View(Mapper.Map<JournalViewModel>(journal));
         }
 
         //
-        // POST: /StoreManager/Edit/5
+        // POST: /JournalsManager/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
@@ -150,23 +150,23 @@ namespace MedicalJournals.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                DbContext.Update(journal);
-                await DbContext.SaveChangesAsync(requestAborted);
+                _context.Update(journal);
+                await _context.SaveChangesAsync(requestAborted);
                 //Invalidate the cache entry as it is modified
                 cache.Remove(GetCacheKey(journal.JournalId));
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CategoryId = new SelectList(DbContext.Categories, "CategoryId", "Name", journal.CategoryId);
-            ViewBag.PublisherId = new SelectList(DbContext.Publishers, "PublisherId", "Name", journal.Publisher.PublisherId);
+            ViewBag.CategoryId = new SelectList(_context.Categories, "CategoryId", "Name", journal.CategoryId);
+            ViewBag.PublisherId = new SelectList(_context.Publishers, "PublisherId", "Name", journal.Publisher.PublisherId);
             return View(Mapper.Map<JournalViewModel>(journal));
         }
 
         //
-        // GET: /StoreManager/RemoveJournal/5
+        // GET: /JournalsManager/RemoveJournal/5
         public async Task<IActionResult> RemoveJournal(Guid id)
         {
-            var journal = await DbContext.Journals.Where(a => a.JournalId == id).FirstOrDefaultAsync();
+            var journal = await _context.Journals.Where(a => a.JournalId == id).FirstOrDefaultAsync();
             if (journal == null)
             {
                 return NotFound();
@@ -176,21 +176,21 @@ namespace MedicalJournals.Web.Areas.Admin.Controllers
         }
 
         //
-        // POST: /StoreManager/RemoveJournal/5
+        // POST: /JournalsManager/RemoveJournal/5
         [HttpPost, ActionName("RemoveJournal")]
         public async Task<IActionResult> RemoveJournalConfirmed(
             [FromServices] IMemoryCache cache,
             Guid id,
             CancellationToken requestAborted)
         {
-            var journal = await DbContext.Journals.Where(a => a.JournalId == id).FirstOrDefaultAsync();
+            var journal = await _context.Journals.Where(a => a.JournalId == id).FirstOrDefaultAsync();
             if (journal == null)
             {
                 return NotFound();
             }
 
-            DbContext.Journals.Remove(journal);
-            await DbContext.SaveChangesAsync(requestAborted);
+            _context.Journals.Remove(journal);
+            await _context.SaveChangesAsync(requestAborted);
             //Remove the cache entry as it is removed
             cache.Remove(GetCacheKey(id));
 
@@ -204,14 +204,14 @@ namespace MedicalJournals.Web.Areas.Admin.Controllers
 
         // NOTE: this is used for end to end testing only
         //
-        // GET: /StoreManager/GetJournalIdFromName
+        // GET: /JournalsManager/GetJournalIdFromName
         // Note: Added for automated testing purpose. Application does not use this.
         [HttpGet]
         [SkipStatusCodePages]
         [EnableCors("CorsPolicy")]
         public async Task<IActionResult> GetJournalIdFromName(string journalName)
         {
-            var journal = await DbContext.Journals.Where(a => a.Title == journalName).FirstOrDefaultAsync();
+            var journal = await _context.Journals.Where(a => a.Title == journalName).FirstOrDefaultAsync();
 
             if (journal == null)
             {

@@ -1,6 +1,7 @@
 ﻿@using System.Threading.Tasks
-@using MedicalJournals.Models.Data
-@model Journal
+@using MedicalJournals.Web.ViewModels
+@model JournalViewModel
+
 
 @{
     ViewBag.Title = "Create";
@@ -26,10 +27,10 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Publisher.PublisherId, "PublisherId", new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.PublisherId, "PublisherId", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("PublisherId", String.Empty)
-                @Html.ValidationMessageFor(model => model.Publisher.PublisherId)
+                @Html.ValidationMessageFor(model => model.PublisherId)
             </div>
         </div>
 
