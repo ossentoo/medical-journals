@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "MedicalJournals.Models": "1.0.0-*",
+    "NETStandard.Library": "1.6.0",
+    "Moq": "4.6.38-alpha"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}

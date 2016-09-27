@@ -1,4 +1,4 @@
-﻿namespace MedicalJournals.Web.Properties
+﻿namespace MedicalJournals.Common.Settings
 {
     public class AppSettings
     {

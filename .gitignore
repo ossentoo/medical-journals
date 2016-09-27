@@ -22,3 +22,5 @@
 /src/Tests/MedicalJournals.IntegrationTests/bin/Debug
 /src/Tests/MedicalJournals.UnitTests/bin/Debug
 /.vs/MedicalJournals/v14/.suo
+/src/Common/MedicalJournals.Common/bin/Debug/netstandard1.6
+/src/Common/MedicalJournals.Common/obj/Debug/netstandard1.6

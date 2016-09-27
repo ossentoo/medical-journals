@@ -1,13 +1,13 @@
 using System;
 using System.Threading.Tasks;
 using MedicalJournals.Entities;
-using MedicalJournals.Web.Properties;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using AutoMapper;
+using MedicalJournals.Common.Settings;
 using MedicalJournals.Models.Data;
 using MedicalJournals.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;

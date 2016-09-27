@@ -1,16 +1,23 @@
-﻿using MedicalJournals.Models.Identity;
+﻿using MedicalJournals.Common.Settings;
+using MedicalJournals.Entities.Interfaces;
+using MedicalJournals.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace MedicalJournals.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly AppSettings _appSettings;
+        private readonly IUnitOfWork _uow;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(UserManager<ApplicationUser> userManager)
+        public HomeController(IUnitOfWork uow, UserManager<ApplicationUser> userManager, IOptions<AppSettings> appSettings)
         {
+            _uow = uow;
             _userManager = userManager;
+            _appSettings = appSettings.Value;
         }
         
         public IActionResult Index()
@@ -45,6 +52,11 @@ namespace MedicalJournals.Web.Controllers
         public IActionResult Error()
         {
             return View();
+        }
+
+        public IActionResult StatusCodePage()
+        {
+            return View("~/Views/Shared/StatusCodePage.cshtml");
         }
     }
 }

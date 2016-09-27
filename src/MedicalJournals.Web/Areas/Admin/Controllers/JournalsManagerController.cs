@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MedicalJournals.Entities;
 using MedicalJournals.Models.Data;
-using MedicalJournals.Web.Properties;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +12,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using AutoMapper;
+using MedicalJournals.Common.Settings;
 using MedicalJournals.Web.ViewModels;
 
 namespace MedicalJournals.Web.Areas.Admin.Controllers
